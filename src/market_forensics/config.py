@@ -1,11 +1,13 @@
 """Configuration loading utilities."""
 
+from __future__ import annotations
+
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Union
 
 
-def load_config(config_path: str | Path) -> dict[str, Any]:
+def load_config(config_path: Union[str, Path]) -> Dict[str, Any]:
     """Load configuration from a JSON file.
 
     Args:
@@ -28,4 +30,6 @@ def load_config(config_path: str | Path) -> dict[str, Any]:
 
 def get_default_config_path() -> Path:
     """Get the path to the default configuration file."""
-    return Path(__file__).parent.parent.parent.parent / "config" / "default.json"
+    # __file__ is src/market_forensics/config.py
+    # .parent.parent.parent = repo root
+    return Path(__file__).parent.parent.parent / "config" / "default.json"
