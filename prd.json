@@ -1,0 +1,109 @@
+{
+    "project": "market-forensics",
+    "branchName": "feat/market-forensics-v1",
+    "userStories": [
+        {
+            "id": "MF-001",
+            "title": "Repo skeleton + config plumbing",
+            "priority": 1,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Create minimal project structure (src/, data/, outputs/, notebooks/ or scripts/).",
+                "Add a config file (e.g., config.yaml or config.json) that includes: exchange, symbols, time window sizes, shock thresholds.",
+                "Add README section: 'How to run' with placeholder commands (will fill in later)."
+            ]
+        },
+        {
+            "id": "MF-002",
+            "title": "Implement data model + loaders for trades + top-of-book",
+            "priority": 2,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Define canonical schemas/types for: Trade, TopOfBook (best bid/ask), and Event.",
+                "Implement loaders that can read local CSV/JSONL files for trades and top-of-book into the canonical types.",
+                "Loader must validate required fields and fail loudly with clear errors.",
+                "Add a tiny sample dataset in data/sample/ and a script that loads it successfully."
+            ]
+        },
+        {
+            "id": "MF-003",
+            "title": "Create price-shock event detector (config-driven)",
+            "priority": 3,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Implement an event detector that flags moments where price moves by >= threshold within a rolling window.",
+                "Threshold and window size must be configurable.",
+                "Outputs a list of detected events with timestamps and direction (up/down).",
+                "Include unit-like checks (simple assertions) for edge cases: empty data, constant price, duplicated timestamps."
+            ]
+        },
+        {
+            "id": "MF-004",
+            "title": "Extract standardized pre/post event windows",
+            "priority": 4,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Given an event timestamp, extract a pre-window and post-window for trades and top-of-book.",
+                "Windows must be parameterized by duration and align to event time.",
+                "Handle overlapping events deterministically (e.g., keep first, or merge; document choice).",
+                "Persist each window to outputs/windows/ for reproducibility."
+            ]
+        },
+        {
+            "id": "MF-005",
+            "title": "Compute core microstructure metrics per window",
+            "priority": 5,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Compute: trade count, trade volume, avg trade size, spread (ask-bid), midprice, simple realized volatility proxy.",
+                "Compute metrics for both pre and post windows.",
+                "Store results in outputs/metrics/ as CSV/JSON with clear column names."
+            ]
+        },
+        {
+            "id": "MF-006",
+            "title": "Determine 'what changes first' within each event",
+            "priority": 6,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Define an operational rule for 'change onset' (e.g., first time metric exceeds baseline by k*std or percentile threshold).",
+                "Apply rule to spread, volume, and price movement signals to estimate ordering within each event.",
+                "Output per-event ordering classification (e.g., liquidity-first, trades-first, price-first).",
+                "Document assumptions and limitations in README."
+            ]
+        },
+        {
+            "id": "MF-007",
+            "title": "Generate plots for individual events and aggregate summaries",
+            "priority": 7,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Create plots per event: price/mid, spread, and volume over time around event.",
+                "Create aggregate summary plots/tables: distribution of ordering types per asset.",
+                "Save to outputs/plots/ with deterministic filenames."
+            ]
+        },
+        {
+            "id": "MF-008",
+            "title": "Add reproducible experiment runner command",
+            "priority": 8,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Provide a single command/script to run the full pipeline end-to-end on sample data.",
+                "Command produces events -> windows -> metrics -> ordering -> plots in outputs/.",
+                "README includes exact command and expected outputs structure."
+            ]
+        },
+        {
+            "id": "MF-009",
+            "title": "Draft research-style report scaffold (not claims yet)",
+            "priority": 9,
+            "passes": false,
+            "acceptanceCriteria": [
+                "Create report/outline.md with sections: Intro, Data, Method, Metrics, Event Definition, Results, Robustness, Limitations.",
+                "Populate with methodology text only (no strong claims).",
+                "Link figures/tables generated by the pipeline."
+            ]
+        }
+    ]
+}
