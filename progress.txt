@@ -11,6 +11,8 @@
 - Event detectors validate inputs and raise DetectorError for invalid parameters
 - Window extractors validate inputs and raise WindowError for invalid parameters
 - Overlap handling for events: "keep_first" strategy is deterministic and documented
+- Metrics calculator uses MetricsError for computation failures
+- WindowMetrics and EventMetrics are dataclasses with to_dict() for serialization
 
 ---
 
@@ -97,4 +99,27 @@
   - WindowError is the exception class for window extraction failures
   - Window ID format: {symbol}_{YYYYMMDD_HHMMSS}_{event_type} for deterministic filenames
   - Output files per window: _event.json, _pre_trades.csv, _post_trades.csv, _pre_tob.csv, _post_tob.csv
+---
+
+## [2026-02-02 15:30] - MF-005
+- What was implemented:
+  - Metrics calculator in src/market_forensics/metrics/calculator.py
+  - WindowMetrics dataclass: trade_count, trade_volume, avg_trade_size, vwap, spread metrics, realized_volatility
+  - EventMetrics dataclass: combines pre and post window metrics with event metadata
+  - compute_trade_metrics(): count, volume, avg size, VWAP, realized vol (std of log returns), min/max price
+  - compute_tob_metrics(): avg spread, avg spread_bps, avg midprice
+  - compute_window_metrics() / compute_event_metrics() / compute_all_metrics(): aggregation functions
+  - save_metrics(): saves to JSON and CSV with flattened structure (pre_*, post_* prefixed columns)
+  - Test suite in tests/test_metrics.py with 17 unit-like assertions
+- Files changed:
+  - src/market_forensics/metrics/calculator.py (new)
+  - src/market_forensics/metrics/__init__.py (updated with exports)
+  - tests/test_metrics.py (new)
+  - prd.json (MF-005 passes: true)
+- **Learnings for future iterations:**
+  - MetricsError is the exception class for metrics computation failures (follows DataLoadError pattern)
+  - Realized volatility uses std deviation of log returns (needs >= 2 data points)
+  - VWAP = sum(price * size) / sum(size)
+  - EventMetrics.to_dict() flattens pre/post metrics with prefixes for easy CSV export
+  - Empty windows return zeros for counts, None for averages
 ---
