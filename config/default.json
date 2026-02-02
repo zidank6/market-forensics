@@ -1,6 +1,8 @@
 {
-    "exchange": "binance",
-    "symbols": ["BTC-USDT", "ETH-USDT"],
+    "exchange": "binance_futures_um",
+    "symbols": [
+        "BTCUSDT"
+    ],
     "event_detection": {
         "price_shock_threshold_pct": 0.5,
         "rolling_window_seconds": 60
@@ -14,7 +16,7 @@
         "threshold_std_multiplier": 2.0
     },
     "paths": {
-        "data_dir": "data/sample",
+        "data_dir": "data/binance/futures_um/BTCUSDT/canonical/2024-03-28/",
         "output_dir": "outputs"
     }
 }

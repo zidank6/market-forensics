@@ -181,9 +181,6 @@ Examples:
 
     # Get default paths relative to repo root
     default_config = "config/default.json"
-    default_trades = "data/sample/trades.csv"
-    default_tob = "data/sample/tob.csv"
-    default_output = "outputs"
 
     parser.add_argument(
         "--config", "-c",
@@ -192,18 +189,18 @@ Examples:
     )
     parser.add_argument(
         "--trades", "-t",
-        default=default_trades,
-        help=f"Path to trades CSV/JSONL file (default: {default_trades})",
+        default=None,
+        help="Path to trades CSV/JSONL file (default: from config paths.data_dir)",
     )
     parser.add_argument(
         "--tob", "-b",
-        default=default_tob,
-        help=f"Path to top-of-book CSV/JSONL file (default: {default_tob})",
+        default=None,
+        help="Path to top-of-book CSV/JSONL file (default: from config paths.data_dir)",
     )
     parser.add_argument(
         "--output", "-o",
-        default=default_output,
-        help=f"Output directory (default: {default_output})",
+        default=None,
+        help="Output directory (default: from config paths.output_dir)",
     )
     parser.add_argument(
         "--quiet", "-q",
@@ -213,12 +210,22 @@ Examples:
 
     args = parser.parse_args()
 
+    # Load config to get default paths
+    config = load_config(args.config)
+    data_dir = Path(config.get("paths", {}).get("data_dir", "data/sample"))
+    output_dir = config.get("paths", {}).get("output_dir", "outputs")
+
+    # Use config-derived paths if not overridden by CLI args
+    trades_path = args.trades if args.trades else str(data_dir / "trades.csv")
+    tob_path = args.tob if args.tob else str(data_dir / "tob.csv")
+    output_path = args.output if args.output else output_dir
+
     try:
         run_pipeline(
             config_path=args.config,
-            trades_path=args.trades,
-            tob_path=args.tob,
-            output_dir=args.output,
+            trades_path=trades_path,
+            tob_path=tob_path,
+            output_dir=output_path,
             verbose=not args.quiet,
         )
         return 0
