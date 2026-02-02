@@ -98,7 +98,7 @@
             "id": "MF-009",
             "title": "Draft research-style report scaffold (not claims yet)",
             "priority": 9,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Create report/outline.md with sections: Intro, Data, Method, Metrics, Event Definition, Results, Robustness, Limitations.",
                 "Populate with methodology text only (no strong claims).",

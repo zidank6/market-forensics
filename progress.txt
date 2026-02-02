@@ -203,3 +203,21 @@
   - run_summary.json contains full manifest of generated files
   - Sample data has ~0.7% price shock, so 0.5% threshold detects it
 ---
+
+## [2026-02-02 17:30] - MF-009
+- What was implemented:
+  - Research report scaffold in report/outline.md
+  - Sections: Intro, Data, Method, Metrics, Event Definition, Results, Robustness, Limitations
+  - Methodology text only (no empirical claims)
+  - Links to pipeline outputs (plots, metrics, etc.)
+  - Includes parameter sensitivity table and robustness checks
+  - Appendix with full outputs reference structure
+- Files changed:
+  - report/outline.md (new)
+  - prd.json (MF-009 passes: true)
+- **Learnings for future iterations:**
+  - Report is methodology-only until run on production data
+  - Clear disclaimer at top and bottom about no empirical claims
+  - Links use relative paths to outputs/ directory
+  - Robustness section suggests parameter sensitivity tests
+---
