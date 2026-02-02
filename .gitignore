@@ -1,1 +1,8 @@
+# Generated outputs
+outputs/
+
+# Large raw & canonical datasets
+data/binance/
+
+# OS junk
 .DS_Store
