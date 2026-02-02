@@ -64,7 +64,7 @@
             "id": "MF-006",
             "title": "Determine 'what changes first' within each event",
             "priority": 6,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Define an operational rule for 'change onset' (e.g., first time metric exceeds baseline by k*std or percentile threshold).",
                 "Apply rule to spread, volume, and price movement signals to estimate ordering within each event.",

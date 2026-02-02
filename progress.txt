@@ -13,6 +13,8 @@
 - Overlap handling for events: "keep_first" strategy is deterministic and documented
 - Metrics calculator uses MetricsError for computation failures
 - WindowMetrics and EventMetrics are dataclasses with to_dict() for serialization
+- Ordering detector uses OrderingError and OnsetType enum (LIQUIDITY, VOLUME, PRICE)
+- Classification outputs: liquidity-first, volume-first, price-first, undetermined
 
 ---
 
@@ -122,4 +124,31 @@
   - VWAP = sum(price * size) / sum(size)
   - EventMetrics.to_dict() flattens pre/post metrics with prefixes for easy CSV export
   - Empty windows return zeros for counts, None for averages
+---
+
+## [2026-02-02 16:00] - MF-006
+- What was implemented:
+  - Change ordering detector in src/market_forensics/events/ordering.py
+  - OnsetDetection dataclass: stores onset time, baseline, threshold, and value for each signal
+  - EventOrdering dataclass: combines all three signal onsets with classification
+  - detect_spread_onset(): detects liquidity withdrawal (spread widening)
+  - detect_volume_onset(): detects volume spikes (bucketed by time)
+  - detect_price_onset(): detects price movement (direction-aware)
+  - determine_ordering(): sorts onsets by time and classifies as liquidity/volume/price-first
+  - analyze_event_ordering() / analyze_all_orderings(): full analysis pipeline
+  - save_orderings(): saves to JSON and CSV
+  - README updated with detailed assumptions & limitations section
+  - Test suite in tests/test_ordering.py with 19 unit-like assertions
+- Files changed:
+  - src/market_forensics/events/ordering.py (new)
+  - src/market_forensics/events/__init__.py (updated with exports)
+  - tests/test_ordering.py (new)
+  - README.md (updated with ordering assumptions/limitations)
+  - prd.json (MF-006 passes: true)
+- **Learnings for future iterations:**
+  - OrderingError is the exception class for ordering detection failures
+  - Onset threshold = baseline + k*std (from pre-window), configurable via ordering_detection.threshold_std_multiplier
+  - Volume is bucketed into configurable time intervals (default 5s) before computing baseline
+  - Classification: liquidity-first, volume-first, price-first, or undetermined
+  - Price onset is direction-aware: looks for price below threshold for down events, above for up events
 ---
