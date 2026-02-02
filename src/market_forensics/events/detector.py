@@ -57,29 +57,26 @@ def detect_price_shocks(
     events: List[Event] = []
     window_delta = timedelta(seconds=window_seconds)
 
-    # Sliding window approach: for each point, look back within the window
-    # and check if the price has moved by >= threshold_pct
-    for i in range(len(data)):
+    # O(n) two-pointer sliding window approach
+    # left pointer tracks the start of the window, advances monotonically
+    left = 0
+    n = len(data)
+
+    for i in range(n):
         current_ts = timestamps[i]
         current_price = prices[i]
         window_start = current_ts - window_delta
 
-        # Find the earliest index within the window
-        j = i
-        while j > 0 and timestamps[j - 1] >= window_start:
-            j -= 1
+        # Advance left pointer to maintain window boundary (O(n) total across all iterations)
+        while left < i and timestamps[left] < window_start:
+            left += 1
 
-        # Get min and max prices within the window up to current point
-        window_prices = prices[j : i + 1]
-        if len(window_prices) < 2:
+        # Need at least 2 points in window to detect a shock
+        if i - left < 1:
             continue
 
-        min_price = min(window_prices)
-        max_price = max(window_prices)
-
-        # Check if there's a price shock
-        # We look for the move from the earliest extreme to current
-        reference_price = prices[j]
+        # Reference price is the first element in the window
+        reference_price = prices[left]
         if reference_price == 0:
             continue
 
