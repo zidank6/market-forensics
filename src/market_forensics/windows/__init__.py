@@ -1,0 +1,1 @@
+"""Window extraction around events."""

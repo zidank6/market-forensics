@@ -1,0 +1,20 @@
+{
+    "exchange": "binance",
+    "symbols": ["BTC-USDT", "ETH-USDT"],
+    "event_detection": {
+        "price_shock_threshold_pct": 1.0,
+        "rolling_window_seconds": 60
+    },
+    "windows": {
+        "pre_event_seconds": 300,
+        "post_event_seconds": 300
+    },
+    "ordering_detection": {
+        "baseline_window_seconds": 300,
+        "threshold_std_multiplier": 2.0
+    },
+    "paths": {
+        "data_dir": "data/sample",
+        "output_dir": "outputs"
+    }
+}
