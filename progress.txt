@@ -7,6 +7,8 @@
 - Type hints must be Python 3.9 compatible: use `from __future__ import annotations` and `Union[A, B]`, `List[T]` instead of `A | B`, `list[T]`
 - Data loaders validate required columns and fail loudly with DataLoadError
 - Canonical data types: Trade, TopOfBook, Event (all frozen dataclasses)
+- Tests live in tests/ and can run standalone: PYTHONPATH=src python3 -m tests.test_<module>
+- Event detectors validate inputs and raise DetectorError for invalid parameters
 
 ---
 
@@ -49,4 +51,26 @@
   - TopOfBook has computed properties: mid_price, spread, spread_bps
   - Loaders auto-detect format from file extension (.csv, .jsonl)
   - Timestamps support ISO 8601 and Unix timestamp (seconds or milliseconds)
+---
+
+## [2026-02-02 14:30] - MF-003
+- What was implemented:
+  - Price-shock event detector in src/market_forensics/events/detector.py
+  - Config-driven detection via detect_price_shocks_from_config()
+  - Returns list of Event objects with timestamp, symbol, direction (up/down), magnitude
+  - Rolling window approach: compares current price to reference price within window
+  - Deduplication logic: keeps largest magnitude event within each window period
+  - Test suite in tests/test_detector.py with 15 unit-like assertions
+- Files changed:
+  - src/market_forensics/events/detector.py (new)
+  - src/market_forensics/events/__init__.py (updated with exports)
+  - tests/__init__.py (new)
+  - tests/test_detector.py (new)
+  - prd.json (MF-003 passes: true)
+- **Learnings for future iterations:**
+  - Event detector uses DetectorError for validation failures (analogous to DataLoadError)
+  - Tests can run standalone: PYTHONPATH=src python3 -m tests.test_detector
+  - Edge cases covered: empty data, constant price, duplicated timestamps, unsorted timestamps
+  - detect_price_shocks() accepts both List[Trade] and List[TopOfBook]
+  - Event metadata includes reference_price, current_price, threshold_pct, window_seconds
 ---

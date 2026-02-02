@@ -29,7 +29,7 @@
             "id": "MF-003",
             "title": "Create price-shock event detector (config-driven)",
             "priority": 3,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Implement an event detector that flags moments where price moves by >= threshold within a rolling window.",
                 "Threshold and window size must be configurable.",
