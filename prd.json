@@ -87,7 +87,7 @@
             "id": "MF-008",
             "title": "Add reproducible experiment runner command",
             "priority": 8,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Provide a single command/script to run the full pipeline end-to-end on sample data.",
                 "Command produces events -> windows -> metrics -> ordering -> plots in outputs/.",

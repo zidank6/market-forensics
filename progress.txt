@@ -17,6 +17,7 @@
 - Classification outputs: liquidity-first, volume-first, price-first, undetermined
 - Plots use matplotlib (optional); summary tables (CSV) work without it
 - Plot filenames are deterministic: {window_id}_{type}.png
+- Pipeline runner: PYTHONPATH=src python3 -m market_forensics.run
 
 ---
 
@@ -177,4 +178,28 @@
   - Summary table (CSV) works without matplotlib, plots require it
   - Plot filenames: {window_id}_price.png, {window_id}_spread.png, {window_id}_volume.png
   - Volume plots bucket trades by time (default 5s) for cleaner visualization
+---
+
+## [2026-02-02 17:00] - MF-008
+- What was implemented:
+  - Pipeline runner in src/market_forensics/run.py
+  - run_pipeline(): orchestrates full pipeline (events -> windows -> metrics -> ordering -> plots)
+  - CLI with argparse: supports --config, --trades, --tob, --output, --quiet flags
+  - Default paths point to sample data for easy testing
+  - Generates run_summary.json with all output paths
+  - Progress logging with verbose/quiet mode
+  - Prints ordering classification summary at end
+  - README updated with exact command and expected outputs structure
+  - Lowered default threshold to 0.5% to detect events in sample data
+- Files changed:
+  - src/market_forensics/run.py (new)
+  - README.md (updated with command docs and output structure)
+  - config/default.json (updated threshold to 0.5%)
+  - prd.json (MF-008 passes: true)
+- **Learnings for future iterations:**
+  - Use PYTHONPATH=src python3 -m market_forensics.run to run pipeline
+  - Default config at config/default.json, sample data at data/sample/
+  - Pipeline outputs to outputs/ with subdirs: windows/, metrics/, plots/
+  - run_summary.json contains full manifest of generated files
+  - Sample data has ~0.7% price shock, so 0.5% threshold detects it
 ---

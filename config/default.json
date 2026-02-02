@@ -2,7 +2,7 @@
     "exchange": "binance",
     "symbols": ["BTC-USDT", "ETH-USDT"],
     "event_detection": {
-        "price_shock_threshold_pct": 1.0,
+        "price_shock_threshold_pct": 0.5,
         "rolling_window_seconds": 60
     },
     "windows": {

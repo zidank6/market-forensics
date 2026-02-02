@@ -54,12 +54,49 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ### Running the Pipeline
 
 ```bash
-# Run full pipeline with default config
-python -m market_forensics.run --config config/default.json
+# Run full pipeline on sample data (default paths)
+PYTHONPATH=src python3 -m market_forensics.run
 
-# Run with custom config
-python -m market_forensics.run --config path/to/config.json
+# Run with explicit paths
+PYTHONPATH=src python3 -m market_forensics.run \
+    --config config/default.json \
+    --trades data/sample/trades.csv \
+    --tob data/sample/tob.csv \
+    --output outputs
+
+# Quiet mode (no progress messages)
+PYTHONPATH=src python3 -m market_forensics.run --quiet
 ```
+
+### Expected Outputs
+
+After running the pipeline, the `outputs/` directory will contain:
+
+```
+outputs/
+├── run_summary.json           # Summary of the run with all file paths
+├── windows/                   # Extracted event windows
+│   ├── {window_id}_event.json     # Event metadata
+│   ├── {window_id}_pre_trades.csv # Pre-window trades
+│   ├── {window_id}_post_trades.csv
+│   ├── {window_id}_pre_tob.csv    # Pre-window top-of-book
+│   └── {window_id}_post_tob.csv
+├── metrics/
+│   ├── event_metrics.json     # Full metrics in JSON
+│   ├── event_metrics.csv      # Full metrics in CSV
+│   ├── event_orderings.json   # Ordering analysis in JSON
+│   └── event_orderings.csv    # Ordering analysis in CSV
+└── plots/                     # Visualizations (requires matplotlib)
+    ├── events/
+    │   ├── {window_id}_price.png
+    │   ├── {window_id}_spread.png
+    │   └── {window_id}_volume.png
+    ├── ordering_distribution.png
+    ├── ordering_by_symbol.png
+    └── ordering_summary.csv   # Always generated (no matplotlib needed)
+```
+
+The `window_id` format is: `{symbol}_{YYYYMMDD_HHMMSS}_{event_type}`
 
 ### Configuration
 
@@ -142,8 +179,15 @@ Events are classified based on which signal first crosses its threshold:
 ### Running Tests
 
 ```bash
-# Run tests (when available)
-python -m pytest -q
+# Run all tests (standalone, no pytest required)
+PYTHONPATH=src python3 -m tests.test_detector
+PYTHONPATH=src python3 -m tests.test_windows
+PYTHONPATH=src python3 -m tests.test_metrics
+PYTHONPATH=src python3 -m tests.test_ordering
+PYTHONPATH=src python3 -m tests.test_plots
+
+# Or with pytest (if installed)
+python3 -m pytest -q
 ```
 
 ## License
