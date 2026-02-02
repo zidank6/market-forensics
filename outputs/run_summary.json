@@ -1,0 +1,50 @@
+{
+  "config": "config/default.json",
+  "events": [
+    {
+      "timestamp": "2024-03-28T00:20:22.409000+00:00",
+      "symbol": "BTCUSDT",
+      "direction": "up",
+      "magnitude": 0.5093842822870107
+    },
+    {
+      "timestamp": "2024-03-28T13:34:07.840000+00:00",
+      "symbol": "BTCUSDT",
+      "direction": "up",
+      "magnitude": 0.5684720611186924
+    },
+    {
+      "timestamp": "2024-03-28T13:37:17.493000+00:00",
+      "symbol": "BTCUSDT",
+      "direction": "down",
+      "magnitude": -0.6731375815078472
+    }
+  ],
+  "windows": [
+    {
+      "event": "outputs/windows/BTCUSDT_20240328_002022_price_shock_event.json",
+      "pre_trades": "outputs/windows/BTCUSDT_20240328_002022_price_shock_pre_trades.csv",
+      "post_trades": "outputs/windows/BTCUSDT_20240328_002022_price_shock_post_trades.csv",
+      "pre_tob": "outputs/windows/BTCUSDT_20240328_002022_price_shock_pre_tob.csv",
+      "post_tob": "outputs/windows/BTCUSDT_20240328_002022_price_shock_post_tob.csv"
+    },
+    {
+      "event": "outputs/windows/BTCUSDT_20240328_133407_price_shock_event.json",
+      "pre_trades": "outputs/windows/BTCUSDT_20240328_133407_price_shock_pre_trades.csv",
+      "post_trades": "outputs/windows/BTCUSDT_20240328_133407_price_shock_post_trades.csv",
+      "pre_tob": "outputs/windows/BTCUSDT_20240328_133407_price_shock_pre_tob.csv",
+      "post_tob": "outputs/windows/BTCUSDT_20240328_133407_price_shock_post_tob.csv"
+    }
+  ],
+  "metrics": {
+    "json": "outputs/metrics/event_metrics.json",
+    "csv": "outputs/metrics/event_metrics.csv"
+  },
+  "orderings": {
+    "json": "outputs/metrics/event_orderings.json",
+    "csv": "outputs/metrics/event_orderings.csv"
+  },
+  "plots": {
+    "summary_table": "outputs/plots/ordering_summary.csv"
+  }
+}

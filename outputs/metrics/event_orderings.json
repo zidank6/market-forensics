@@ -1,0 +1,43 @@
+[
+  {
+    "window_id": "BTCUSDT_20240328_002022_price_shock",
+    "symbol": "BTCUSDT",
+    "event_timestamp": "2024-03-28T00:20:22.409000+00:00",
+    "event_direction": "up",
+    "liquidity_onset_time": "2024-03-28T00:21:23.316000+00:00",
+    "volume_onset_time": null,
+    "price_onset_time": "2024-03-28T00:21:38.490000+00:00",
+    "ordering": [
+      "liquidity",
+      "price"
+    ],
+    "classification": "liquidity-first",
+    "liquidity_baseline": 0.6856943939956914,
+    "liquidity_threshold": 9.139971675660021,
+    "volume_baseline": 44.166196721311266,
+    "volume_threshold": 348.071069793393,
+    "price_baseline": 69727.00474481551,
+    "price_threshold": 70048.82201151719
+  },
+  {
+    "window_id": "BTCUSDT_20240328_133407_price_shock",
+    "symbol": "BTCUSDT",
+    "event_timestamp": "2024-03-28T13:34:07.840000+00:00",
+    "event_direction": "up",
+    "liquidity_onset_time": "2024-03-28T13:34:08.100000+00:00",
+    "volume_onset_time": "2024-03-28T13:35:05+00:00",
+    "price_onset_time": "2024-03-28T13:34:12.037000+00:00",
+    "ordering": [
+      "liquidity",
+      "price",
+      "volume"
+    ],
+    "classification": "liquidity-first",
+    "liquidity_baseline": 0.20732880946988125,
+    "liquidity_threshold": 1.8287662196306889,
+    "volume_baseline": 84.37303278688529,
+    "volume_threshold": 236.34572280413045,
+    "price_baseline": 71009.36103456456,
+    "price_threshold": 71282.91452631801
+  }
+]

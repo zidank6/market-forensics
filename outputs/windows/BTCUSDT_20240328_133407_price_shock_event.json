@@ -1,0 +1,20 @@
+{
+  "window_id": "BTCUSDT_20240328_133407_price_shock",
+  "event_timestamp": "2024-03-28T13:34:07.840000+00:00",
+  "symbol": "BTCUSDT",
+  "event_type": "price_shock",
+  "direction": "up",
+  "magnitude": 0.5684720611186924,
+  "metadata": {
+    "reference_price": 70865.4,
+    "current_price": 71268.25,
+    "threshold_pct": 0.5,
+    "window_seconds": 60
+  },
+  "pre_seconds": 300,
+  "post_seconds": 300,
+  "pre_trades_count": 25989,
+  "post_trades_count": 33456,
+  "pre_tob_count": 134251,
+  "post_tob_count": 157588
+}
