@@ -1,0 +1,27 @@
+## Codebase Patterns
+- Keep pipeline outputs deterministic under outputs/
+- Config values must be in config/*.json (no hardcoded thresholds)
+- Python packages live in src/market_forensics/ with submodules: data/, events/, windows/, metrics/, plots/
+- Use python3 (not python) for commands on macOS
+- Sample data goes in data/sample/
+
+---
+
+## [2026-02-02 13:35] - MF-001
+- What was implemented:
+  - Created project directory structure: src/market_forensics/, data/sample/, outputs/{windows,metrics,plots}/, config/
+  - Added config/default.json with exchange, symbols, event detection thresholds, window sizes
+  - Added config loader utility in src/market_forensics/config.py
+  - Updated README.md with project overview, structure, and "How to run" section
+- Files changed:
+  - README.md (updated)
+  - config/default.json (new)
+  - src/market_forensics/__init__.py (new)
+  - src/market_forensics/config.py (new)
+  - src/market_forensics/{data,events,windows,metrics,plots}/__init__.py (new)
+  - data/sample/.gitkeep, outputs/*/.gitkeep (new)
+- **Learnings for future iterations:**
+  - Use python3 instead of python on macOS
+  - Keep __init__.py files minimal with just docstrings
+  - Config loader uses Path for cross-platform compatibility
+---

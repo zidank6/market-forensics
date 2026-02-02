@@ -6,7 +6,7 @@
             "id": "MF-001",
             "title": "Repo skeleton + config plumbing",
             "priority": 1,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Create minimal project structure (src/, data/, outputs/, notebooks/ or scripts/).",
                 "Add a config file (e.g., config.yaml or config.json) that includes: exchange, symbols, time window sizes, shock thresholds.",
