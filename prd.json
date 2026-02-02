@@ -76,7 +76,7 @@
             "id": "MF-007",
             "title": "Generate plots for individual events and aggregate summaries",
             "priority": 7,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Create plots per event: price/mid, spread, and volume over time around event.",
                 "Create aggregate summary plots/tables: distribution of ordering types per asset.",

@@ -15,6 +15,8 @@
 - WindowMetrics and EventMetrics are dataclasses with to_dict() for serialization
 - Ordering detector uses OrderingError and OnsetType enum (LIQUIDITY, VOLUME, PRICE)
 - Classification outputs: liquidity-first, volume-first, price-first, undetermined
+- Plots use matplotlib (optional); summary tables (CSV) work without it
+- Plot filenames are deterministic: {window_id}_{type}.png
 
 ---
 
@@ -151,4 +153,28 @@
   - Volume is bucketed into configurable time intervals (default 5s) before computing baseline
   - Classification: liquidity-first, volume-first, price-first, or undetermined
   - Price onset is direction-aware: looks for price below threshold for down events, above for up events
+---
+
+## [2026-02-02 16:30] - MF-007
+- What was implemented:
+  - Plot generator in src/market_forensics/plots/generator.py
+  - Per-event plots: plot_event_price(), plot_event_spread(), plot_event_volume()
+  - Aggregate plots: plot_ordering_distribution(), plot_ordering_by_symbol()
+  - Summary table: generate_summary_table() for ordering counts by symbol (CSV, no matplotlib required)
+  - generate_all_plots(): orchestrates all plot generation
+  - Graceful handling when matplotlib not installed (MATPLOTLIB_AVAILABLE flag)
+  - PlotPaths dataclass for structured return of per-event plot paths
+  - Filenames are deterministic: {window_id}_{type}.png, ordering_distribution.png, ordering_by_symbol.png
+  - Test suite in tests/test_plots.py with 8 unit-like assertions
+- Files changed:
+  - src/market_forensics/plots/generator.py (new)
+  - src/market_forensics/plots/__init__.py (updated with exports)
+  - tests/test_plots.py (new)
+  - prd.json (MF-007 passes: true)
+- **Learnings for future iterations:**
+  - PlotError is the exception class for plotting failures (e.g., missing matplotlib)
+  - Use matplotlib.use('Agg') for non-interactive file-saving backend
+  - Summary table (CSV) works without matplotlib, plots require it
+  - Plot filenames: {window_id}_price.png, {window_id}_spread.png, {window_id}_volume.png
+  - Volume plots bucket trades by time (default 5s) for cleaner visualization
 ---
