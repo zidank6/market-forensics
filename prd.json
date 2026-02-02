@@ -41,7 +41,7 @@
             "id": "MF-004",
             "title": "Extract standardized pre/post event windows",
             "priority": 4,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Given an event timestamp, extract a pre-window and post-window for trades and top-of-book.",
                 "Windows must be parameterized by duration and align to event time.",

@@ -9,6 +9,8 @@
 - Canonical data types: Trade, TopOfBook, Event (all frozen dataclasses)
 - Tests live in tests/ and can run standalone: PYTHONPATH=src python3 -m tests.test_<module>
 - Event detectors validate inputs and raise DetectorError for invalid parameters
+- Window extractors validate inputs and raise WindowError for invalid parameters
+- Overlap handling for events: "keep_first" strategy is deterministic and documented
 
 ---
 
@@ -73,4 +75,26 @@
   - Edge cases covered: empty data, constant price, duplicated timestamps, unsorted timestamps
   - detect_price_shocks() accepts both List[Trade] and List[TopOfBook]
   - Event metadata includes reference_price, current_price, threshold_pct, window_seconds
+---
+
+## [2026-02-02 15:00] - MF-004
+- What was implemented:
+  - Window extractor in src/market_forensics/windows/extractor.py
+  - EventWindow dataclass: container for pre/post trades and tob around an event
+  - extract_window(): extracts single event window with configurable pre/post duration
+  - extract_windows(): handles multiple events with overlap strategy ("keep_first")
+  - extract_windows_from_config(): reads window durations from config file
+  - save_window() / save_windows(): persist to outputs/windows/ as JSON (event) + CSV (data)
+  - Test suite in tests/test_windows.py with 18 unit-like assertions
+- Files changed:
+  - src/market_forensics/windows/extractor.py (new)
+  - src/market_forensics/windows/__init__.py (updated with exports)
+  - tests/test_windows.py (new)
+  - prd.json (MF-004 passes: true)
+- **Learnings for future iterations:**
+  - Window boundaries: pre-window is (event-pre_sec, event), post-window is [event, event+post_sec)
+  - Overlap handling: "keep_first" strategy skips events whose timestamp falls within a prior event's post-window
+  - WindowError is the exception class for window extraction failures
+  - Window ID format: {symbol}_{YYYYMMDD_HHMMSS}_{event_type} for deterministic filenames
+  - Output files per window: _event.json, _pre_trades.csv, _post_trades.csv, _pre_tob.csv, _post_tob.csv
 ---
