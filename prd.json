@@ -17,7 +17,7 @@
             "id": "MF-002",
             "title": "Implement data model + loaders for trades + top-of-book",
             "priority": 2,
-            "passes": false,
+            "passes": true,
             "acceptanceCriteria": [
                 "Define canonical schemas/types for: Trade, TopOfBook (best bid/ask), and Event.",
                 "Implement loaders that can read local CSV/JSONL files for trades and top-of-book into the canonical types.",

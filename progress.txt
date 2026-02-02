@@ -4,6 +4,9 @@
 - Python packages live in src/market_forensics/ with submodules: data/, events/, windows/, metrics/, plots/
 - Use python3 (not python) for commands on macOS
 - Sample data goes in data/sample/
+- Type hints must be Python 3.9 compatible: use `from __future__ import annotations` and `Union[A, B]`, `List[T]` instead of `A | B`, `list[T]`
+- Data loaders validate required columns and fail loudly with DataLoadError
+- Canonical data types: Trade, TopOfBook, Event (all frozen dataclasses)
 
 ---
 
@@ -24,4 +27,26 @@
   - Use python3 instead of python on macOS
   - Keep __init__.py files minimal with just docstrings
   - Config loader uses Path for cross-platform compatibility
+---
+
+## [2026-02-02 14:00] - MF-002
+- What was implemented:
+  - Canonical data models in src/market_forensics/data/models.py: Trade, TopOfBook, Event
+  - Data loaders in src/market_forensics/data/loaders.py: CSV/JSONL for trades and top-of-book
+  - Sample dataset in data/sample/: trades.csv (25 trades) and tob.csv (25 snapshots)
+  - Demo script scripts/load_sample_data.py to validate loading pipeline
+- Files changed:
+  - src/market_forensics/data/models.py (new)
+  - src/market_forensics/data/loaders.py (new)
+  - src/market_forensics/data/__init__.py (updated with exports)
+  - src/market_forensics/config.py (fixed path calculation)
+  - data/sample/trades.csv (new)
+  - data/sample/tob.csv (new)
+  - scripts/load_sample_data.py (new)
+- **Learnings for future iterations:**
+  - Python 3.9 requires `from __future__ import annotations` for modern type hint syntax
+  - Frozen dataclasses with __post_init__ validation work well for immutable data records
+  - TopOfBook has computed properties: mid_price, spread, spread_bps
+  - Loaders auto-detect format from file extension (.csv, .jsonl)
+  - Timestamps support ISO 8601 and Unix timestamp (seconds or milliseconds)
 ---
