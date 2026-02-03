@@ -73,3 +73,23 @@
   - run_summary.json contains event counts; event_orderings.csv has per-window classifications
   - Classification field uses "liquidity-first", "price-first", "volume-first" naming
 ---
+
+## [2026-02-02 19:35] - MF-014
+- What was implemented:
+  - Created `scripts/run_sensitivity.py`
+  - Varies price_shock_threshold_pct via temporary config files (0.4, 0.5, 0.6)
+  - Runs pipeline 3 times with each threshold
+  - Produces `outputs/sensitivity_summary.csv`
+- Results on 2024-03-27:
+  - threshold=0.4%: 23 events, 16 windows (8 liq, 7 price, 1 vol)
+  - threshold=0.5%: 17 events, 12 windows (6 liq, 4 price, 2 vol)
+  - threshold=0.6%: 11 events, 8 windows (4 liq, 2 price, 2 vol)
+- Files changed:
+  - `scripts/run_sensitivity.py` - new file
+  - `outputs/sensitivity_summary.csv` - generated output
+  - `outputs/sensitivity_0.4/`, `outputs/sensitivity_0.5/`, `outputs/sensitivity_0.6/` - pipeline outputs
+- **Learnings for future iterations:**
+  - Lower thresholds detect more events (more sensitive)
+  - Liquidity-first remains the plurality classification across all thresholds
+  - Use tempfile for config overrides to avoid modifying base config
+---

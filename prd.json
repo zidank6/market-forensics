@@ -55,7 +55,7 @@
             "id": "MF-014",
             "title": "Run threshold sensitivity analysis",
             "priority": 5,
-            "passes": false,
+            "passes": true,
             "description": "Run the pipeline on a single date with varying thresholds (0.4%, 0.5%, 0.6%) to check if ordering results are stable.",
             "acceptanceCriteria": [
                 "Create scripts/run_sensitivity.py that varies price_shock_threshold_pct.",
