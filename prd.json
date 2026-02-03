@@ -31,7 +31,7 @@
             "id": "MF-012",
             "title": "Run pipeline on 3+ distinct trading days",
             "priority": 3,
-            "passes": false,
+            "passes": true,
             "description": "Execute the replication runner on at least 3 distinct BTCUSDT trading days and verify each produces ordering results.",
             "acceptanceCriteria": [
                 "Pipeline runs successfully on at least 3 dates.",

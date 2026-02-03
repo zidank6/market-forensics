@@ -39,3 +39,22 @@
   - Config overrides via CLI args (--trades, --tob, --output)
   - Wrapper scripts live in `scripts/`, keep `src/` untouched for analysis changes
 ---
+
+## [2026-02-02 19:25] - MF-012
+- What was implemented:
+  - Ran pipeline on 3 distinct trading days: 2024-03-27, 2024-03-28, 2024-03-29
+  - Each date produced event_orderings.csv in outputs/{date}/metrics/
+  - Added 2024-03-27 (higher volatility) replacing 2024-03-30 (weekend, 0 events)
+  - Updated config/replication_dates.json with final date selection
+- Results:
+  - 2024-03-27: 17 events, 12 windows (6 liquidity-first, 4 price-first, 2 volume-first)
+  - 2024-03-28: 3 events, 2 windows (2 liquidity-first)
+  - 2024-03-29: 2 events, 1 window (1 liquidity-first)
+- Files changed:
+  - `config/replication_dates.json` - updated dates list
+  - `outputs/2024-03-27/`, `outputs/2024-03-28/`, `outputs/2024-03-29/` - pipeline outputs
+- **Learnings for future iterations:**
+  - Weekend dates (Sat/Sun) have significantly lower volatility - fewer events
+  - 2024-03-27 had the most activity (likely due to macro BTC volatility that week)
+  - Ordering classifications vary: liquidity-first dominant but not universal
+---

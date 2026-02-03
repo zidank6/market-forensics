@@ -3,9 +3,9 @@
     "symbol": "BTCUSDT",
     "exchange": "binance_futures_um",
     "dates": [
+        "2024-03-27",
         "2024-03-28",
-        "2024-03-29",
-        "2024-03-30"
+        "2024-03-29"
     ],
     "data_source": {
         "url": "https://data.binance.vision/data/futures/um/daily/",
