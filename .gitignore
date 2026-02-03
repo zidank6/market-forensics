@@ -1,8 +1,12 @@
-# Generated outputs
-outputs/
+# default: ignore all generated outputs
+outputs/*
 
-# Large raw & canonical datasets
+# but keep the research artifacts
+!outputs/replication_summary.csv
+!outputs/sensitivity_summary.csv
+!outputs/replication_report.md
+
+# ignore raw data
 data/binance/
 
-# OS junk
 .DS_Store

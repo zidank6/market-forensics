@@ -1,0 +1,4 @@
+threshold_pct,date,events_detected,windows_extracted,liquidity_first,price_first,volume_first
+0.4,2024-03-27,23,16,8,7,1
+0.5,2024-03-27,17,12,6,4,2
+0.6,2024-03-27,11,8,4,2,2
