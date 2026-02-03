@@ -19,7 +19,7 @@
             "id": "MF-V2-002",
             "title": "Create multi-day multi-asset pipeline runner",
             "priority": 2,
-            "passes": false,
+            "passes": true,
             "description": "Build orchestration script that runs the existing pipeline across all dates and assets from the manifest.",
             "acceptanceCriteria": [
                 "Create scripts/run_v2_analysis.py",
@@ -34,7 +34,7 @@
             "id": "MF-V2-003",
             "title": "Aggregate results into unified summary table",
             "priority": 3,
-            "passes": false,
+            "passes": true,
             "description": "Collect all event-level ordering results into a single aggregated dataset.",
             "acceptanceCriteria": [
                 "Create scripts/aggregate_v2_results.py",
@@ -48,7 +48,7 @@
             "id": "MF-V2-004",
             "title": "Implement statistical tests for liquidity-first proportion",
             "priority": 4,
-            "passes": false,
+            "passes": true,
             "description": "Add formal statistical tests to quantify whether liquidity-first ordering occurs more often than chance.",
             "acceptanceCriteria": [
                 "Create scripts/run_statistics.py",
@@ -62,7 +62,7 @@
             "id": "MF-V2-005",
             "title": "Generate key visualizations",
             "priority": 5,
-            "passes": false,
+            "passes": true,
             "description": "Create publication-quality plots showing the precedence pattern.",
             "acceptanceCriteria": [
                 "Create scripts/generate_v2_figures.py",
@@ -76,7 +76,7 @@
             "id": "MF-V2-006",
             "title": "Run threshold sensitivity analysis",
             "priority": 6,
-            "passes": false,
+            "passes": true,
             "description": "Verify results are robust to threshold variations.",
             "acceptanceCriteria": [
                 "Create scripts/run_sensitivity.py",
@@ -90,7 +90,7 @@
             "id": "MF-V2-007",
             "title": "Write v2 research findings document",
             "priority": 7,
-            "passes": false,
+            "passes": true,
             "description": "Produce a structured writeup summarizing v2 methodology and results.",
             "acceptanceCriteria": [
                 "Create report/v2_findings.md",

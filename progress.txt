@@ -1,5 +1,12 @@
 # Market Forensics v2 Progress
 
+## Codebase Patterns
+- Canonical data lives at: `data/binance/futures_um/{ASSET}/canonical/{DATE}/` with `trades.csv` and `tob.csv`
+- V2 outputs go to `outputs/v2/{asset}/{date}/` (organized by asset then date)
+- Use `python3` not `python` (system default on macOS)
+- Scripts should support `--dry-run` for user visibility before long runs
+- Use subprocess to call `market_forensics.run` module with PYTHONPATH set to src/
+
 ## Branch: feat/market-forensics-v2
 
 ## Goal
@@ -14,12 +21,12 @@ Validate liquidity-first hypothesis with 50-100 events across 2 assets.
 ## Stories
 
 - [x] MF-V2-001: Select and document target dates for analysis
-- [ ] MF-V2-002: Create multi-day multi-asset pipeline runner
-- [ ] MF-V2-003: Aggregate results into unified summary table
-- [ ] MF-V2-004: Implement statistical tests for liquidity-first proportion
-- [ ] MF-V2-005: Generate key visualizations
-- [ ] MF-V2-006: Run threshold sensitivity analysis
-- [ ] MF-V2-007: Write v2 research findings document
+- [x] MF-V2-002: Create multi-day multi-asset pipeline runner
+- [x] MF-V2-003: Aggregate results into unified summary table
+- [x] MF-V2-004: Implement statistical tests for liquidity-first proportion
+- [x] MF-V2-005: Generate key visualizations
+- [x] MF-V2-006: Run threshold sensitivity analysis
+- [x] MF-V2-007: Write v2 research findings document
 
 ---
 
@@ -31,3 +38,99 @@ Validate liquidity-first hypothesis with 50-100 events across 2 assets.
 - Total canonical data: ~60GB
 - Manifest: config/dates.json
 - Key dates: Jan 10-11 (ETF), Mar 5,14 (ATH)
+
+---
+
+## [2026-02-03 17:00] - MF-V2-002
+- What was implemented
+  - Created `scripts/run_v2_analysis.py` - multi-day multi-asset pipeline runner
+  - Reads dates from `config/dates.json` manifest
+  - Runs pipeline for each (asset, date) pair with available data
+  - Outputs to `outputs/v2/{asset}/{date}/`
+  - Skips missing dates gracefully with warning
+  - Supports `--dry-run`, `--assets`, `--dates` filtering options
+- Files changed
+  - `scripts/run_v2_analysis.py` (new)
+- **Learnings for future iterations:**
+  - Assets in dates.json are detected as uppercase keys with list values
+  - Reference `scripts/run_replication.py` for subprocess pattern
+  - Dry-run output: 31 (asset, date) pairs available (17 BTCUSDT + 14 ETHUSDT)
+---
+
+## [2026-02-03 17:15] - MF-V2-003
+- What was implemented
+  - Created `scripts/aggregate_v2_results.py` - aggregates v2 results into unified summary
+  - Reads `outputs/v2/{asset}/{date}/metrics/event_orderings.csv` files
+  - Produces `outputs/v2_summary.csv` with columns: date, asset, event_id, classification, onset_*_sec, onset_delta
+  - Computes onset_delta = onset_liquidity - onset_price (negative if liquidity leads)
+  - Reports total event count and classification breakdown
+- Files changed
+  - `scripts/aggregate_v2_results.py` (new)
+- **Learnings for future iterations:**
+  - event_orderings.csv has columns: window_id, symbol, event_timestamp, *_onset_time, classification
+  - Onset times are ISO timestamps; compute seconds relative to event_timestamp
+  - Use `collections.Counter` for quick classification breakdown
+---
+
+## [2026-02-03 17:25] - MF-V2-004
+- What was implemented
+  - Created `scripts/run_statistics.py` - statistical tests for liquidity-first proportion
+  - Binomial test: two-sided test vs 33% null (3-class uniform)
+  - Bootstrap 95% CI: percentile method with 1000 resamples
+  - Outputs to `outputs/v2_stats.json` with p-value, CI, counts
+  - Human-readable summary with interpretation to stdout
+  - Implements binomial PMF and bootstrap from scratch (no scipy dependency)
+- Files changed
+  - `scripts/run_statistics.py` (new)
+- **Learnings for future iterations:**
+  - Use `math.lgamma` for log-binomial coefficient to avoid overflow
+  - Percentile bootstrap: sort proportions, pick indices at alpha/2 and 1-alpha/2
+  - Always set random seed for reproducibility (default: 42)
+---
+
+## [2026-02-03 17:35] - MF-V2-005
+- What was implemented
+  - Created `scripts/generate_v2_figures.py` - generates key visualizations
+  - Plot 1: Bar chart of ordering proportions (liquidity-first vs others)
+  - Plot 2: Histogram of onset deltas (t_liquidity - t_price in seconds)
+  - Saves to `outputs/figures/` as PNG (with matplotlib) or TXT/CSV (fallback)
+  - Always outputs CSV for data portability
+  - Uses `matplotlib.use('Agg')` for non-interactive backend
+- Files changed
+  - `scripts/generate_v2_figures.py` (new)
+- **Learnings for future iterations:**
+  - Check MATPLOTLIB_AVAILABLE before importing
+  - Use Agg backend for headless PNG generation
+  - Always provide CSV fallback for portability
+---
+
+## [2026-02-03 17:45] - MF-V2-006
+- What was implemented
+  - Created `scripts/run_v2_sensitivity.py` - v2 threshold sensitivity analysis
+  - Tests thresholds: 0.3%, 0.4%, 0.5%, 0.6%, 0.7%
+  - Runs detection and ordering for each threshold across all v2 (asset, date) pairs
+  - Produces `outputs/sensitivity.csv` with columns: threshold, n_events, pct_liquidity_first
+  - Uses temp config overrides (not modifying default.json)
+  - Supports `--dry-run` to preview processing
+- Files changed
+  - `scripts/run_v2_sensitivity.py` (new)
+- **Learnings for future iterations:**
+  - Reuse `create_config_with_threshold` pattern from existing run_sensitivity.py
+  - Temp config files must be cleaned up in finally block
+  - Capture subprocess output to suppress noise during batch runs
+---
+
+## [2026-02-03 17:55] - MF-V2-007
+- What was implemented
+  - Created `report/v2_findings.md` - structured v2 research findings document
+  - Sections: Summary, Data, Methods, Results, Robustness, Limitations, Conclusion
+  - References outputs: v2_stats.json, outputs/figures/*, sensitivity.csv
+  - Provides guidance on interpreting statistical tests
+  - Includes full pipeline execution guide in Appendix
+- Files changed
+  - `report/v2_findings.md` (new)
+- **Learnings for future iterations:**
+  - Structure as a template that gets populated after running scripts
+  - Reference output files inline rather than hardcoding values
+  - Include complete execution guide for reproducibility
+---
