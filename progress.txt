@@ -58,3 +58,18 @@
   - 2024-03-27 had the most activity (likely due to macro BTC volatility that week)
   - Ordering classifications vary: liquidity-first dominant but not universal
 ---
+
+## [2026-02-02 19:30] - MF-013
+- What was implemented:
+  - Created `scripts/aggregate_results.py`
+  - Reads event_orderings.csv from each date's output directory
+  - Produces `outputs/replication_summary.csv` with required columns
+  - Prints summary statistics to console
+- Files changed:
+  - `scripts/aggregate_results.py` - new file
+  - `outputs/replication_summary.csv` - generated output
+- **Learnings for future iterations:**
+  - Use `from __future__ import annotations` for Python 3.9 compatibility
+  - run_summary.json contains event counts; event_orderings.csv has per-window classifications
+  - Classification field uses "liquidity-first", "price-first", "volume-first" naming
+---

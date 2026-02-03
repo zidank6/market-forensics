@@ -43,7 +43,7 @@
             "id": "MF-013",
             "title": "Aggregate ordering outcomes into summary table",
             "priority": 4,
-            "passes": false,
+            "passes": true,
             "description": "Create a script that collects ordering classifications from all multi-day runs into a single replication_summary.csv.",
             "acceptanceCriteria": [
                 "Create scripts/aggregate_results.py that reads outputs/{date}/metrics/event_orderings.csv.",
