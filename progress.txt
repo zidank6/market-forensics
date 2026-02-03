@@ -24,3 +24,18 @@
   - 2024-03-29 had lower volume than 2024-03-28 (78MB vs 105MB trades)
   - 2024-03-30 was a weekend day with even lower volume (41MB trades)
 ---
+
+## [2026-02-02 19:20] - MF-011
+- What was implemented:
+  - Created `scripts/run_replication.py` wrapper script
+  - Script reads dates from `config/replication_dates.json` or accepts `--dates` CLI arg
+  - Runs `python -m market_forensics.run` for each date with PYTHONPATH set
+  - Outputs to `outputs/{date}/` to keep results separate
+  - No modifications to `src/market_forensics/`
+- Files changed:
+  - `scripts/run_replication.py` - new file
+- **Learnings for future iterations:**
+  - Pipeline invoked via subprocess with PYTHONPATH=src
+  - Config overrides via CLI args (--trades, --tob, --output)
+  - Wrapper scripts live in `scripts/`, keep `src/` untouched for analysis changes
+---

@@ -18,7 +18,7 @@
             "id": "MF-011",
             "title": "Create multi-day pipeline runner script",
             "priority": 2,
-            "passes": false,
+            "passes": true,
             "description": "Create a wrapper script that runs the existing pipeline on multiple dates specified in a config, without modifying core src/ code.",
             "acceptanceCriteria": [
                 "Create scripts/run_replication.py that accepts a list of dates.",
