@@ -10,3 +10,10 @@ outputs/*
 data/binance/
 
 .DS_Store
+
+# Ignore raw datasets
+data/binance/
+
+# Ignore generated outputs
+outputs/
+.DS_Store
