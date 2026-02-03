@@ -93,3 +93,23 @@
   - Liquidity-first remains the plurality classification across all thresholds
   - Use tempfile for config overrides to avoid modifying base config
 ---
+
+## [2026-02-02 19:40] - MF-015
+- What was implemented:
+  - Created `scripts/generate_report.py`
+  - Reads replication_summary.csv and sensitivity_summary.csv
+  - Produces `outputs/replication_report.md` markdown report
+  - All numbers derived from CSVs (not hardcoded)
+  - Answers research question: "Is liquidity-first ordering consistent?"
+- Key findings in report:
+  - Liquidity-first: 60% of detected events across 3 days
+  - Pattern stable across threshold variations (0.4%-0.6%)
+  - Answer: "Yes, with qualifications"
+- Files changed:
+  - `scripts/generate_report.py` - new file
+  - `outputs/replication_report.md` - generated output
+- **Learnings for future iterations:**
+  - Reports should always derive numbers from generated data files
+  - Include caveats about data limitations (days, symbol, exchange)
+  - Structure: Executive Summary -> Data Tables -> Analysis -> Answer
+---

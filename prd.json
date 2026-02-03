@@ -68,7 +68,7 @@
             "id": "MF-015",
             "title": "Generate final research summary",
             "priority": 6,
-            "passes": false,
+            "passes": true,
             "description": "Produce a clean markdown summary of replication and sensitivity results suitable for inclusion in a research writeup.",
             "acceptanceCriteria": [
                 "Create outputs/replication_report.md with: dates analyzed, event counts, ordering breakdown table, sensitivity findings.",
