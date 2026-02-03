@@ -1,79 +1,103 @@
 {
     "project": "market-forensics",
-    "branchName": "feat/replication-robustness",
+    "branchName": "feat/market-forensics-v2",
     "userStories": [
         {
-            "id": "MF-010",
-            "title": "Canonicalize additional BTCUSDT trading days",
+            "id": "MF-V2-001",
+            "title": "Select and document target dates for analysis",
             "priority": 1,
             "passes": true,
-            "description": "Prepare canonical data for at least 2 additional BTCUSDT trading days beyond 2024-03-28 to enable multi-day replication analysis.",
+            "description": "Choose 10-15 high-volatility trading days per asset and document them in a manifest file. User will manually download and canonicalize.",
             "acceptanceCriteria": [
-                "Run canonicalize_binance_um_day.py for at least 2 additional dates.",
-                "Each date produces trades.csv and tob.csv in data/binance/futures_um/BTCUSDT/canonical/{date}/.",
-                "Document selected dates in a config or manifest file."
+                "Create config/dates.json with selected dates for BTCUSDT and ETHUSDT",
+                "Prioritize known high-volatility days (news events, vol spikes)",
+                "Document date selection rationale in config/dates.json comments or README",
+                "Target: 10-15 dates per asset"
             ]
         },
         {
-            "id": "MF-011",
-            "title": "Create multi-day pipeline runner script",
+            "id": "MF-V2-002",
+            "title": "Create multi-day multi-asset pipeline runner",
             "priority": 2,
-            "passes": true,
-            "description": "Create a wrapper script that runs the existing pipeline on multiple dates specified in a config, without modifying core src/ code.",
+            "passes": false,
+            "description": "Build orchestration script that runs the existing pipeline across all dates and assets from the manifest.",
             "acceptanceCriteria": [
-                "Create scripts/run_replication.py that accepts a list of dates.",
-                "Script runs python -m src.market_forensics.run for each date with appropriate config overrides.",
-                "Each run outputs to outputs/{date}/ to keep results separate.",
-                "No modifications to src/market_forensics/."
+                "Create scripts/run_v2_analysis.py",
+                "Reads dates from config/dates.json",
+                "Runs pipeline for each (date, asset) pair that has data",
+                "Outputs to outputs/v2/{asset}/{date}/",
+                "Skips missing dates gracefully with warning",
+                "No modifications to src/market_forensics/"
             ]
         },
         {
-            "id": "MF-012",
-            "title": "Run pipeline on 3+ distinct trading days",
+            "id": "MF-V2-003",
+            "title": "Aggregate results into unified summary table",
             "priority": 3,
-            "passes": true,
-            "description": "Execute the replication runner on at least 3 distinct BTCUSDT trading days and verify each produces ordering results.",
+            "passes": false,
+            "description": "Collect all event-level ordering results into a single aggregated dataset.",
             "acceptanceCriteria": [
-                "Pipeline runs successfully on at least 3 dates.",
-                "Each run produces event_orderings.csv (or equivalent) in its output directory.",
-                "No errors or hangs during execution."
+                "Create scripts/aggregate_v2_results.py",
+                "Reads all outputs/v2/{asset}/{date}/metrics/event_orderings.csv",
+                "Produces outputs/v2_summary.csv with columns: date, asset, event_id, classification, onset_liquidity_sec, onset_price_sec, onset_volume_sec",
+                "Compute onset_delta = onset_liquidity - onset_price",
+                "Report total event count"
             ]
         },
         {
-            "id": "MF-013",
-            "title": "Aggregate ordering outcomes into summary table",
+            "id": "MF-V2-004",
+            "title": "Implement statistical tests for liquidity-first proportion",
             "priority": 4,
-            "passes": true,
-            "description": "Create a script that collects ordering classifications from all multi-day runs into a single replication_summary.csv.",
+            "passes": false,
+            "description": "Add formal statistical tests to quantify whether liquidity-first ordering occurs more often than chance.",
             "acceptanceCriteria": [
-                "Create scripts/aggregate_results.py that reads outputs/{date}/metrics/event_orderings.csv.",
-                "Produces outputs/replication_summary.csv with columns: date, events_detected, windows_extracted, liquidity_first_count, price_first_count, trade_first_count.",
-                "Summary accurately reflects data from all processed dates."
+                "Create scripts/run_statistics.py",
+                "Binomial test: liquidity-first proportion vs 33% null (3-class uniform)",
+                "Bootstrap 95% CI on liquidity-first proportion (1000 resamples)",
+                "Output to outputs/v2_stats.json with p-value, CI, counts",
+                "Print human-readable summary to stdout"
             ]
         },
         {
-            "id": "MF-014",
-            "title": "Run threshold sensitivity analysis",
+            "id": "MF-V2-005",
+            "title": "Generate key visualizations",
             "priority": 5,
-            "passes": true,
-            "description": "Run the pipeline on a single date with varying thresholds (0.4%, 0.5%, 0.6%) to check if ordering results are stable.",
+            "passes": false,
+            "description": "Create publication-quality plots showing the precedence pattern.",
             "acceptanceCriteria": [
-                "Create scripts/run_sensitivity.py that varies price_shock_threshold_pct.",
-                "Runs pipeline 3 times with thresholds: 0.4, 0.5, 0.6.",
-                "Produces outputs/sensitivity_summary.csv showing ordering counts by threshold.",
-                "Uses config overrides, not hardcoded source changes."
+                "Create scripts/generate_v2_figures.py",
+                "Plot 1: Bar chart of ordering proportions (liquidity-first vs others)",
+                "Plot 2: Histogram of onset deltas (t_liquidity - t_price in seconds)",
+                "Save to outputs/figures/ as PNG",
+                "Works without matplotlib (fallback to ASCII/CSV if unavailable)"
             ]
         },
         {
-            "id": "MF-015",
-            "title": "Generate final research summary",
+            "id": "MF-V2-006",
+            "title": "Run threshold sensitivity analysis",
             "priority": 6,
-            "passes": true,
-            "description": "Produce a clean markdown summary of replication and sensitivity results suitable for inclusion in a research writeup.",
+            "passes": false,
+            "description": "Verify results are robust to threshold variations.",
             "acceptanceCriteria": [
-                "Create outputs/replication_report.md with: dates analyzed, event counts, ordering breakdown table, sensitivity findings.",
-                "All numbers are derived from generated CSVs (not hardcoded).",
-                "Report answers: 'Is liquidity-first ordering consistent across days and thresholds?'"
+                "Create scripts/run_sensitivity.py",
+                "Test thresholds: 0.3%, 0.4%, 0.5%, 0.6%, 0.7%",
+                "Re-run detection and ordering for each threshold",
+                "Produce outputs/sensitivity.csv with columns: threshold, n_events, pct_liquidity_first",
+                "Uses temp config overrides, not modifying default.json"
+            ]
+        },
+        {
+            "id": "MF-V2-007",
+            "title": "Write v2 research findings document",
+            "priority": 7,
+            "passes": false,
+            "description": "Produce a structured writeup summarizing v2 methodology and results.",
+            "acceptanceCriteria": [
+                "Create report/v2_findings.md",
+                "Sections: Summary, Data, Methods, Results, Robustness, Limitations",
+                "Include inline stats from v2_stats.json",
+                "Reference figures from outputs/figures/",
+                "State conclusion: is liquidity-first systematic?"
             ]
         }
     ]
