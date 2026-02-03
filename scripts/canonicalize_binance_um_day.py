@@ -48,14 +48,24 @@ def canonicalize_bookticker(in_path: str, out_path: str, symbol: str) -> None:
                 "ask_size": float(row["best_ask_qty"]),
             })
 
-if __name__ == "__main__":
-    symbol = "BTCUSDT"
+def canonicalize_day(date: str, symbol: str = "BTCUSDT") -> None:
+    """Canonicalize raw Binance data for a given date.
 
-    base = os.path.join(HERE, "..", "data", "binance", "futures_um", "BTCUSDT")
-    raw_trades = os.path.join(base, "BTCUSDT-aggTrades-2024-03-28.csv")
-    raw_tob = os.path.join(base, "BTCUSDT-bookTicker-2024-03-28.csv")
+    Args:
+        date: Date in YYYY-MM-DD format
+        symbol: Trading pair symbol (default: BTCUSDT)
+    """
+    base = os.path.join(HERE, "..", "data", "binance", "futures_um", symbol)
+    raw_trades = os.path.join(base, f"{symbol}-aggTrades-{date}.csv")
+    raw_tob = os.path.join(base, f"{symbol}-bookTicker-{date}.csv")
 
-    out_dir = os.path.join(base, "canonical", "2024-03-28")
+    # Validate inputs exist
+    if not os.path.exists(raw_trades):
+        raise FileNotFoundError(f"Raw trades file not found: {raw_trades}")
+    if not os.path.exists(raw_tob):
+        raise FileNotFoundError(f"Raw TOB file not found: {raw_tob}")
+
+    out_dir = os.path.join(base, "canonical", date)
     os.makedirs(out_dir, exist_ok=True)
 
     out_trades = os.path.join(out_dir, "trades.csv")
@@ -67,3 +77,14 @@ if __name__ == "__main__":
     print("Wrote:")
     print(" -", out_trades)
     print(" -", out_tob)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Canonicalize Binance UM data for a specific date")
+    parser.add_argument("--date", required=True, help="Date in YYYY-MM-DD format")
+    parser.add_argument("--symbol", default="BTCUSDT", help="Trading pair symbol (default: BTCUSDT)")
+    args = parser.parse_args()
+
+    canonicalize_day(args.date, args.symbol)

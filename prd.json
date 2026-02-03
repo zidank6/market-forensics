@@ -1,108 +1,79 @@
 {
     "project": "market-forensics",
-    "branchName": "feat/market-forensics-v1",
+    "branchName": "feat/replication-robustness",
     "userStories": [
         {
-            "id": "MF-001",
-            "title": "Repo skeleton + config plumbing",
+            "id": "MF-010",
+            "title": "Canonicalize additional BTCUSDT trading days",
             "priority": 1,
             "passes": true,
+            "description": "Prepare canonical data for at least 2 additional BTCUSDT trading days beyond 2024-03-28 to enable multi-day replication analysis.",
             "acceptanceCriteria": [
-                "Create minimal project structure (src/, data/, outputs/, notebooks/ or scripts/).",
-                "Add a config file (e.g., config.yaml or config.json) that includes: exchange, symbols, time window sizes, shock thresholds.",
-                "Add README section: 'How to run' with placeholder commands (will fill in later)."
+                "Run canonicalize_binance_um_day.py for at least 2 additional dates.",
+                "Each date produces trades.csv and tob.csv in data/binance/futures_um/BTCUSDT/canonical/{date}/.",
+                "Document selected dates in a config or manifest file."
             ]
         },
         {
-            "id": "MF-002",
-            "title": "Implement data model + loaders for trades + top-of-book",
+            "id": "MF-011",
+            "title": "Create multi-day pipeline runner script",
             "priority": 2,
-            "passes": true,
+            "passes": false,
+            "description": "Create a wrapper script that runs the existing pipeline on multiple dates specified in a config, without modifying core src/ code.",
             "acceptanceCriteria": [
-                "Define canonical schemas/types for: Trade, TopOfBook (best bid/ask), and Event.",
-                "Implement loaders that can read local CSV/JSONL files for trades and top-of-book into the canonical types.",
-                "Loader must validate required fields and fail loudly with clear errors.",
-                "Add a tiny sample dataset in data/sample/ and a script that loads it successfully."
+                "Create scripts/run_replication.py that accepts a list of dates.",
+                "Script runs python -m src.market_forensics.run for each date with appropriate config overrides.",
+                "Each run outputs to outputs/{date}/ to keep results separate.",
+                "No modifications to src/market_forensics/."
             ]
         },
         {
-            "id": "MF-003",
-            "title": "Create price-shock event detector (config-driven)",
+            "id": "MF-012",
+            "title": "Run pipeline on 3+ distinct trading days",
             "priority": 3,
-            "passes": true,
+            "passes": false,
+            "description": "Execute the replication runner on at least 3 distinct BTCUSDT trading days and verify each produces ordering results.",
             "acceptanceCriteria": [
-                "Implement an event detector that flags moments where price moves by >= threshold within a rolling window.",
-                "Threshold and window size must be configurable.",
-                "Outputs a list of detected events with timestamps and direction (up/down).",
-                "Include unit-like checks (simple assertions) for edge cases: empty data, constant price, duplicated timestamps."
+                "Pipeline runs successfully on at least 3 dates.",
+                "Each run produces event_orderings.csv (or equivalent) in its output directory.",
+                "No errors or hangs during execution."
             ]
         },
         {
-            "id": "MF-004",
-            "title": "Extract standardized pre/post event windows",
+            "id": "MF-013",
+            "title": "Aggregate ordering outcomes into summary table",
             "priority": 4,
-            "passes": true,
+            "passes": false,
+            "description": "Create a script that collects ordering classifications from all multi-day runs into a single replication_summary.csv.",
             "acceptanceCriteria": [
-                "Given an event timestamp, extract a pre-window and post-window for trades and top-of-book.",
-                "Windows must be parameterized by duration and align to event time.",
-                "Handle overlapping events deterministically (e.g., keep first, or merge; document choice).",
-                "Persist each window to outputs/windows/ for reproducibility."
+                "Create scripts/aggregate_results.py that reads outputs/{date}/metrics/event_orderings.csv.",
+                "Produces outputs/replication_summary.csv with columns: date, events_detected, windows_extracted, liquidity_first_count, price_first_count, trade_first_count.",
+                "Summary accurately reflects data from all processed dates."
             ]
         },
         {
-            "id": "MF-005",
-            "title": "Compute core microstructure metrics per window",
+            "id": "MF-014",
+            "title": "Run threshold sensitivity analysis",
             "priority": 5,
-            "passes": true,
+            "passes": false,
+            "description": "Run the pipeline on a single date with varying thresholds (0.4%, 0.5%, 0.6%) to check if ordering results are stable.",
             "acceptanceCriteria": [
-                "Compute: trade count, trade volume, avg trade size, spread (ask-bid), midprice, simple realized volatility proxy.",
-                "Compute metrics for both pre and post windows.",
-                "Store results in outputs/metrics/ as CSV/JSON with clear column names."
+                "Create scripts/run_sensitivity.py that varies price_shock_threshold_pct.",
+                "Runs pipeline 3 times with thresholds: 0.4, 0.5, 0.6.",
+                "Produces outputs/sensitivity_summary.csv showing ordering counts by threshold.",
+                "Uses config overrides, not hardcoded source changes."
             ]
         },
         {
-            "id": "MF-006",
-            "title": "Determine 'what changes first' within each event",
+            "id": "MF-015",
+            "title": "Generate final research summary",
             "priority": 6,
-            "passes": true,
+            "passes": false,
+            "description": "Produce a clean markdown summary of replication and sensitivity results suitable for inclusion in a research writeup.",
             "acceptanceCriteria": [
-                "Define an operational rule for 'change onset' (e.g., first time metric exceeds baseline by k*std or percentile threshold).",
-                "Apply rule to spread, volume, and price movement signals to estimate ordering within each event.",
-                "Output per-event ordering classification (e.g., liquidity-first, trades-first, price-first).",
-                "Document assumptions and limitations in README."
-            ]
-        },
-        {
-            "id": "MF-007",
-            "title": "Generate plots for individual events and aggregate summaries",
-            "priority": 7,
-            "passes": true,
-            "acceptanceCriteria": [
-                "Create plots per event: price/mid, spread, and volume over time around event.",
-                "Create aggregate summary plots/tables: distribution of ordering types per asset.",
-                "Save to outputs/plots/ with deterministic filenames."
-            ]
-        },
-        {
-            "id": "MF-008",
-            "title": "Add reproducible experiment runner command",
-            "priority": 8,
-            "passes": true,
-            "acceptanceCriteria": [
-                "Provide a single command/script to run the full pipeline end-to-end on sample data.",
-                "Command produces events -> windows -> metrics -> ordering -> plots in outputs/.",
-                "README includes exact command and expected outputs structure."
-            ]
-        },
-        {
-            "id": "MF-009",
-            "title": "Draft research-style report scaffold (not claims yet)",
-            "priority": 9,
-            "passes": true,
-            "acceptanceCriteria": [
-                "Create report/outline.md with sections: Intro, Data, Method, Metrics, Event Definition, Results, Robustness, Limitations.",
-                "Populate with methodology text only (no strong claims).",
-                "Link figures/tables generated by the pipeline."
+                "Create outputs/replication_report.md with: dates analyzed, event counts, ordering breakdown table, sensitivity findings.",
+                "All numbers are derived from generated CSVs (not hardcoded).",
+                "Report answers: 'Is liquidity-first ordering consistent across days and thresholds?'"
             ]
         }
     ]

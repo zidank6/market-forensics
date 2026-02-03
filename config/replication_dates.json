@@ -1,0 +1,15 @@
+{
+    "description": "BTCUSDT trading dates available for replication analysis",
+    "symbol": "BTCUSDT",
+    "exchange": "binance_futures_um",
+    "dates": [
+        "2024-03-28",
+        "2024-03-29",
+        "2024-03-30"
+    ],
+    "data_source": {
+        "url": "https://data.binance.vision/data/futures/um/daily/",
+        "feeds": ["aggTrades", "bookTicker"]
+    },
+    "canonical_base_path": "data/binance/futures_um/BTCUSDT/canonical/"
+}
