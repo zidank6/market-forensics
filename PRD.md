@@ -1,204 +1,167 @@
 # Product Requirements Document (PRD)
 
 ## Project Title
-**Crypto Market Microstructure Event Analysis System**
+**Market Forensics v2: Validating the Liquidity-First Hypothesis**
 
 ## Version
-v1.0 (Concept Lock)
+v2.0
 
 ## Status
-Definition / Research Design Phase
+Ready for Implementation
 
 ## Owner
 Zidan Kazi
 
 ---
 
-## 1. Problem Statement
+## 1. What v1 Proved
 
-Crypto markets frequently experience sudden, sharp price movements. These events are typically discussed in terms of *price* and *volatility*, but price alone does not explain **what actually broke first** inside the market.
+Market Forensics v1 demonstrated that:
 
-Existing analysis often answers *what happened*, not *how it unfolded mechanically*. Two identical price crashes can be driven by very different underlying mechanisms:
-- liquidity withdrawal
-- aggressive trading
-- reflexive feedback loops
+> When sharp price shocks occur in BTCUSDT futures, **liquidity deterioration precedes price movements** in approximately 60% of detected events.
 
-Without reconstructing the **temporal sequence** of internal market changes, it is impossible to distinguish between these failure modes.
+This finding held across 3 trading days and was robust to threshold variations (0.4%–0.6%).
 
-This project aims to systematically reconstruct and analyze the **order in which market components change** during short-term stress events in crypto markets.
+**But v1 is underpowered.** 15 events over 3 days is a proof-of-concept, not a defensible empirical claim.
 
 ---
 
-## 2. Goal
+## 2. v2 Goal
 
-Build a **reproducible, defensible research system** that answers the question:
+**Turn "this looks real" into "this is hard to dismiss."**
 
-> *When crypto markets move suddenly, what changes first: liquidity, trading behavior, or price?*
+v2 answers one question:
 
-The system will analyze real historical data to identify stress events and reconstruct their microstructure evolution.
-
-The goal is **understanding**, not prediction or trading performance.
+> Is the liquidity-first ordering **systematic and robust** across a larger sample, multiple assets, and different market regimes?
 
 ---
 
-## 3. Non-Goals
+## 3. Practical Constraints
+
+**Laptop-based development** — cannot store 100GB+ of raw data.
+
+### Scoping Decision
+- **10-15 trading days** per asset (not 60+)
+- **2 assets**: BTCUSDT + ETHUSDT
+- **Target: 50-100 events** (enough for statistical tests)
+- Canonicalized data only (~1GB/day max)
+
+This is an honest scope that balances rigor with practicality.
+
+---
+
+## 4. Non-Goals
 
 The system explicitly does **not** attempt to:
-- predict future prices
-- generate trading signals or strategies
-- optimize execution or profitability
-- simulate agents or synthetic markets
-- explain macroeconomic or news causality
-
-This is an **observational and forensic** analysis tool.
+- Predict future prices or generate alpha
+- Claim causality (temporal ordering ≠ causation)
+- Add ML models or fancy metrics
+- Store raw tick data long-term
 
 ---
 
-## 4. Scope
+## 5. Success Criteria
+
+v2 succeeds if:
+
+| Criterion | Target |
+|-----------|--------|
+| Trading days analyzed | 10-15 per asset |
+| Non-overlapping events | 50-100 total |
+| Assets | BTCUSDT + ETHUSDT |
+| Statistical significance | p < 0.05 on liquidity-first proportion |
+| Storage footprint | < 25GB total |
+
+---
+
+## 6. Scope
 
 ### In Scope
-- One centralized exchange
-- Real historical data
-- Short event windows (seconds to minutes)
-- BTC, ETH, SOL as primary assets
-- Event-based analysis (not continuous forecasting)
+- 10-15 trading days of BTCUSDT futures (canonicalized)
+- 10-15 trading days of ETHUSDT futures (canonicalized)
+- Formal statistical tests (binomial, bootstrap CI)
+- Event-study visualizations
+- Sensitivity analysis on thresholds
+- Clean summary tables for research writeup
 
-### Out of Scope (v1)
-- Cross-exchange arbitrage
-- Full L2/L3 order book reconstruction
-- News or sentiment ingestion
+### Out of Scope (v2)
+- Full order book depth
+- 60+ days of data
+- Causal inference methods
 - Real-time streaming
-- User-facing dashboards
 
 ---
 
-## 5. Core Concept
+## 7. Data Strategy
 
-Markets are composed of a small number of mechanical components:
-- **Liquidity** (standing orders / spread)
-- **Trading behavior** (trade frequency, size, aggressiveness)
-- **Price** (last executed trade)
+### Data Source
+- **Exchange**: Binance USD-M Futures
+- **Assets**: BTCUSDT, ETHUSDT
+- **Data Types**: 
+  - `aggTrades` → canonical `trades.csv`
+  - `bookTicker` → canonical `tob.csv`
+- **Source**: https://data.binance.vision
 
-During stress events, these components do not necessarily change simultaneously.
+### Target Volume
+| Asset | Days | Storage Est. | Expected Events |
+|-------|------|--------------|-----------------|
+| BTCUSDT | 10-15 | ~8-12GB | 20-50 |
+| ETHUSDT | 10-15 | ~8-12GB | 20-50 |
+| **Total** | — | **~20GB** | **50-100** |
 
-This system identifies **which component reacts first**, and how the others follow.
-
----
-
-## 6. Key Definitions
-
-### Stress Event
-A short time interval where price changes rapidly relative to recent history (e.g. X% within Y seconds).
-
-### Event Window
-A fixed time slice surrounding a stress event:
-- Pre-event window (e.g. 1–5 minutes)
-- Post-event window (e.g. 1–5 minutes)
-
-### Reaction Sequence
-The observed ordering in time of:
-1. Liquidity changes
-2. Trading behavior changes
-3. Price movement
+### Date Selection Strategy
+Pick dates with **known volatility** to maximize events per day:
+- Major news days (ETF announcements, Fed meetings)
+- High-vol weeks (late 2024, early 2025)
+- Avoid weekends (lower activity)
 
 ---
 
-## 7. Functional Requirements
+## 8. Functional Requirements
 
-### FR-1: Data Ingestion
-- Load historical trade data
-- Load best bid / best ask (top-of-book) data
-- Support BTC, ETH, SOL for a single exchange
+### FR-1: Canonicalize 10-15 days per asset
+- Run canonicalize_binance_um_day.py for selected dates
+- Store in data/binance/futures_um/{ASSET}/canonical/{date}/
+- Create config/dates.json manifest
 
-### FR-2: Event Detection
-- Scan historical data to identify sudden price moves
-- Parameterized thresholds (configurable)
-- Produce a list of event timestamps
+### FR-2: Multi-asset pipeline runner
+- Run existing pipeline on both assets
+- Output to outputs/v2/{asset}/{date}/
+- No modifications to src/market_forensics/
 
-### FR-3: Window Extraction
-- Extract standardized pre- and post-event windows
-- Ensure consistent time alignment
-- Handle overlapping events deterministically
+### FR-3: Aggregate results
+- Collect all event-level ordering results
+- Produce outputs/v2_summary.csv
 
-### FR-4: Metric Computation
-Compute simple, interpretable metrics:
-- Trade count
-- Trade volume
-- Average trade size
-- Bid–ask spread
-- Price volatility
+### FR-4: Statistical tests
+- Binomial test on liquidity-first proportion
+- Bootstrap 95% CI
+- Per-asset and pooled results
 
-### FR-5: Temporal Ordering Analysis
-- Determine which metrics change first relative to event onset
-- Compare timing across assets
-- Aggregate patterns across many events
+### FR-5: Visualizations
+- Onset delta histogram
+- Ordering proportions bar chart
+- Event-study mean paths (if time permits)
 
-### FR-6: Output Artifacts
-- Reproducible plots
-- Tables summarizing reaction sequences
-- Saved intermediate datasets
+### FR-6: Research summary
+- report/v2_findings.md with methodology and results
 
 ---
 
-## 8. Non-Functional Requirements
+## 9. Deliverables
 
-### Reproducibility
-- Deterministic runs
-- Config-driven experiment definitions
-- Clear data provenance
-
-### Interpretability
-- No black-box models
-- Metrics must have clear physical meaning
-
-### Transparency
-- Explicit assumptions
-- Documented limitations
+| Deliverable | Description |
+|-------------|-------------|
+| `config/dates.json` | Manifest of dates to process |
+| `outputs/v2_summary.csv` | Aggregated event-level results |
+| `outputs/v2_stats.json` | Statistical test outputs |
+| `outputs/figures/` | Key visualizations |
+| `report/v2_findings.md` | Structured writeup |
 
 ---
 
-## 9. Data Strategy
+## 10. Guiding Principle
 
-### Initial Data Types
-- Trades (timestamp, price, size)
-- Best bid / best ask (timestamp, prices)
+> *Honest scoping beats ambitious failure.*
 
-### Constraints
-- Prefer free or publicly accessible datasets
-- Accept reduced depth in exchange for broader time coverage
-
----
-
-## 10. Validation Strategy
-
-Results will be validated through:
-- Sensitivity analysis (varying thresholds, window sizes)
-- Cross-asset comparison
-- Manual inspection of representative events
-
----
-
-## 11. Success Criteria
-
-The project is successful if:
-- A consistent methodology is implemented
-- Clear reaction sequences are observed
-- Results can be explained in plain language
-- A serious technical reader can reproduce and critique findings
-
----
-
-## 12. Final Deliverables
-
-At least one of the following:
-- A research-style writeup (PDF or markdown)
-- A public reproducible repository
-- A structured technical report with figures and tables
-
----
-
-## 13. Guiding Principle
-
-> *This system exists to see clearly, not to impress.*
-
-If a result is boring but real, it is preferred over a clever but fragile claim.
+50 well-analyzed events across 2 assets is more valuable than a half-finished 300-event analysis that never runs.
