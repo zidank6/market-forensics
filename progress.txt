@@ -255,3 +255,20 @@
   - Removed top/right spines for cleaner look (Anthropic style)
 - Statistics used: 200/186/66 counts, 44.2%/41.1%/14.6% proportions, 33.3% null
 ---
+
+## [2026-02-04 18:45] - MF-V3-012
+- Section written: Final editing and consistency pass
+- Files modified:
+  - `paper/main.md` - Removed all target word count comments
+  - `paper/references.md` - Updated with complete references (11 papers)
+  - `paper/appendix.md` - Created with date list, parameter config, detailed results
+- Key decisions made:
+  - Verified all statistics match v2_stats.json (452 events, 44.25%, p=2×10⁻⁶, etc.)
+  - Confirmed figure references are correct (Figures 1, 2, 3)
+  - Section ordering: Abstract → Intro → Related Work → Data → Methods → Results → Discussion → Limitations → Conclusion
+  - No placeholder text remains (except author names, which should be added by authors)
+  - Added references for: Kyle (1985), Glosten-Milgrom (1985), Amihud (2002), Brunnermeier-Pedersen (2009), Makarov-Schoar (2020), etc.
+  - Appendix includes: complete date list (17 dates), parameter table, per-asset breakdown, statistical test details
+- Final word count: ~4,205 words
+- Statistics verified: All key numbers consistent throughout paper
+---

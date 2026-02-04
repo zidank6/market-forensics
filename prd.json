@@ -204,7 +204,7 @@
             "id": "MF-V3-012",
             "title": "Final editing and consistency pass",
             "priority": 12,
-            "passes": false,
+            "passes": true,
             "description": "Review the complete paper for consistency, accuracy, and polish.",
             "acceptanceCriteria": [
                 "All statistics match outputs/v2_stats.json",

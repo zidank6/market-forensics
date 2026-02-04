@@ -8,7 +8,6 @@
 
 ## Abstract
 
-<!-- Target: 200-250 words -->
 
 Understanding how price shocks originate in financial markets has implications for market design, risk management, and trading strategies. We study whether observable market signals change before rapid price movements occur, focusing on the temporal ordering of liquidity, price, and volume changes around price shock events.
 
@@ -22,7 +21,6 @@ This finding is consistent with theories of informed trading where market makers
 
 ## 1. Introduction
 
-<!-- Target: 400-500 words -->
 
 Rapid price movements in financial markets can have significant consequences. Flash crashes erode market confidence, trigger margin calls, and cause substantial losses for participants caught on the wrong side. Understanding how these events begin—whether they are preceded by detectable warning signals—matters for market design, risk management, and our understanding of price formation.
 
@@ -50,7 +48,6 @@ The remainder of this paper is organized as follows. Section 2 reviews related w
 
 ## 2. Related Work
 
-<!-- Target: 300-400 words -->
 
 Our work relates to several strands of research in market microstructure, liquidity dynamics, and cryptocurrency markets.
 
@@ -68,7 +65,6 @@ Our work relates to several strands of research in market microstructure, liquid
 
 ## 3. Data
 
-<!-- Target: 300-400 words -->
 
 ### 3.1 Data Source
 
@@ -109,7 +105,6 @@ Event counts vary substantially across dates, ranging from 1 event (March 29) to
 
 ## 4. Methods
 
-<!-- Target: 600-800 words -->
 
 Our methodology consists of four stages: (1) detecting price shock events, (2) extracting analysis windows around each event, (3) detecting onset times for liquidity, price, and volume signals, and (4) classifying events by which signal changed first. We then apply statistical tests to determine whether the observed ordering distribution differs from chance.
 
@@ -172,7 +167,6 @@ Figure 3 illustrates the methodology on an example event, showing the temporal p
 
 ## 5. Results
 
-<!-- Target: 500-700 words -->
 
 ### 5.1 Main Finding
 
@@ -252,7 +246,6 @@ Figure 3 illustrates a typical liquidity-first event, showing how spread widenin
 
 ## 6. Discussion
 
-<!-- Target: 400-500 words -->
 
 Our analysis finds that liquidity withdrawal precedes price shocks at a rate significantly above chance. In this section, we discuss what this pattern may indicate, consider alternative explanations, and connect our findings to market microstructure theory. Throughout, we emphasize that our evidence is correlational—we cannot establish that liquidity changes cause subsequent price movements.
 
@@ -288,7 +281,6 @@ However, consistency with theory does not establish that these mechanisms explai
 
 ## 7. Limitations
 
-<!-- Target: 400-500 words -->
 
 We identify several limitations that constrain the conclusions we can draw from this analysis. We state these directly, as understanding what we cannot claim is as important as understanding what we find.
 
@@ -310,7 +302,6 @@ We identify several limitations that constrain the conclusions we can draw from 
 
 ## 8. Conclusion
 
-<!-- Target: 200-250 words -->
 
 We have analyzed 452 price shock events in BTCUSDT and ETHUSDT perpetual futures on Binance and found that liquidity withdrawal precedes price shocks at a rate significantly above chance. Of all events, 44.25% show liquidity changes first, compared to the 33.3% we would expect under uniform distribution (p = 2 × 10⁻⁶). This pattern holds across both assets and is robust to threshold sensitivity analysis.
 
