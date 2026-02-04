@@ -311,9 +311,14 @@ We identify several limitations that constrain the conclusions we can draw from 
 ## 8. Conclusion
 
 <!-- Target: 200-250 words -->
-<!-- TODO: MF-V3-010 -->
 
-[Conclusion placeholder - to be written]
+We have analyzed 452 price shock events in BTCUSDT and ETHUSDT perpetual futures on Binance and found that liquidity withdrawal precedes price shocks at a rate significantly above chance. Of all events, 44.25% show liquidity changes first, compared to the 33.3% we would expect under uniform distribution (p = 2 × 10⁻⁶). This pattern holds across both assets and is robust to threshold sensitivity analysis.
+
+This work contributes an empirical finding—that liquidity and price changes around shocks exhibit systematic temporal ordering—along with a methodology for detecting and classifying these patterns. We emphasize that our evidence is correlational. We cannot determine whether liquidity withdrawal causes subsequent price movements, reflects anticipatory behavior by informed participants, or arises from measurement artifacts.
+
+Several directions could extend this work. First, replication on other exchanges would test whether the liquidity-first pattern generalizes beyond Binance. Second, analysis with full order book depth (rather than top-of-book only) would capture richer liquidity dynamics. Third, careful study of data feed latencies could help distinguish true temporal ordering from measurement artifacts.
+
+The temporal relationship between liquidity and price is not random. Whether this structure reflects informed trading, market maker behavior, or something else entirely remains an open question—but it is a question worth investigating.
 
 ---
 

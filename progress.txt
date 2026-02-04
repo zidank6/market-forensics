@@ -225,3 +225,16 @@
   - Used hedged language ("consistent with", "may be relevant")
 - Statistics used: None (literature review section)
 ---
+
+## [2026-02-04 18:15] - MF-V3-010
+- Section written: Conclusion
+- Word count: ~214 words
+- Key decisions made:
+  - Restated core finding with exact statistics (44.25% vs 33.3%, p = 2×10⁻⁶)
+  - Emphasized both contributions: empirical finding and methodology
+  - Listed three future work directions: other exchanges, full depth-of-book, latency analysis
+  - Ended with measured closing thought about structure being worth investigating
+  - Did NOT introduce new material
+  - Used hedged language for interpretations
+- Statistics used: 452 events, 44.25% liquidity-first, 33.3% null, p = 2×10⁻⁶
+---

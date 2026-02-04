@@ -172,7 +172,7 @@
             "id": "MF-V3-010",
             "title": "Write Conclusion section",
             "priority": 10,
-            "passes": false,
+            "passes": true,
             "description": "Write a concise conclusion restating the contribution and future work.",
             "acceptanceCriteria": [
                 "~200-250 words",
