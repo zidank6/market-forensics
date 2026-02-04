@@ -238,3 +238,20 @@
   - Used hedged language for interpretations
 - Statistics used: 452 events, 44.25% liquidity-first, 33.3% null, p = 2×10⁻⁶
 ---
+
+## [2026-02-04 18:30] - MF-V3-011
+- Section written: Publication-quality figures
+- Files created:
+  - `scripts/generate_paper_figures.py` - Figure generation script
+  - `paper/figures/fig1_ordering_proportions.png` - Bar chart (73KB, 300 DPI)
+  - `paper/figures/fig2_onset_deltas.png` - Histogram (81KB, 300 DPI)
+  - `paper/figures/fig3_example_event.png` - 3-panel event window (420KB, 300 DPI)
+- Key decisions made:
+  - Used consistent color scheme: blue (liquidity), magenta (price), orange (volume)
+  - Added null hypothesis reference line (33.3%) to Figure 1
+  - Figure 2 shows onset deltas filtered to ±10 seconds for readability
+  - Figure 3 uses synthetic data to illustrate typical liquidity-first event pattern
+  - All figures have proper axis labels, legends, and 300 DPI resolution
+  - Removed top/right spines for cleaner look (Anthropic style)
+- Statistics used: 200/186/66 counts, 44.2%/41.1%/14.6% proportions, 33.3% null
+---
