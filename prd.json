@@ -72,7 +72,7 @@
             "id": "MF-V3-004",
             "title": "Write Data section",
             "priority": 4,
-            "passes": false,
+            "passes": true,
             "description": "Document data sources, date selection rationale, and provide summary statistics.",
             "acceptanceCriteria": [
                 "~300-400 words",

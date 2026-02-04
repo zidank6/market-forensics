@@ -60,13 +60,23 @@ The remainder of this paper is organized as follows. Section 2 reviews related w
 ## 3. Data
 
 <!-- Target: 300-400 words -->
-<!-- TODO: MF-V3-004 -->
-
-[Data section placeholder - to be written]
 
 ### 3.1 Data Source
 
+We analyze data from Binance USD-M perpetual futures, the largest cryptocurrency derivatives venue by trading volume. We obtain historical data from data.binance.vision, Binance's public data repository, which provides complete order book and trade data for research purposes.
+
+For each trading day, we download two data feeds:
+
+- **aggTrades**: Aggregated trade records containing timestamp, price, quantity, and trade direction for every executed trade.
+- **bookTicker**: Best bid and ask prices with their quantities, updated on every change to the top of the order book.
+
+We convert raw exchange data into a canonical format with two files per day: `trades.csv` containing trade executions, and `tob.csv` containing top-of-book snapshots. Both files use ISO 8601 timestamps with microsecond precision. This preprocessing enables consistent analysis across dates and simplifies event detection.
+
 ### 3.2 Date Selection
+
+We analyze two assets: BTCUSDT (Bitcoin perpetual) and ETHUSDT (Ethereum perpetual), selected for their high liquidity and trading activity. We selected 17 trading days between January and March 2024, chosen to capture periods of elevated volatility when price shocks are more frequent. The selection includes days surrounding major market events such as Bitcoin ETF approvals (early January 2024) and subsequent price rallies.
+
+We intentionally avoid random date sampling. Our goal is to analyze price shock events, which are rare on typical trading days. Selecting volatile days increases the number of events available for analysis. This approach biases our sample toward "interesting" market conditions, which we discuss in Section 7 (Limitations).
 
 ### 3.3 Summary Statistics
 
@@ -76,9 +86,15 @@ The remainder of this paper is organized as follows. Section 2 reviews related w
 |--------|-------|
 | Assets | BTCUSDT, ETHUSDT |
 | Trading days | 17 |
+| Date range | January 3 – March 29, 2024 |
 | Total events detected | 452 |
+| Events (BTCUSDT) | 239 |
+| Events (ETHUSDT) | 213 |
 | Data source | Binance USD-M Futures |
-| Data types | aggTrades, bookTicker |
+| Raw data feeds | aggTrades, bookTicker |
+| Canonical format | trades.csv, tob.csv |
+
+Event counts vary substantially across dates, ranging from 1 event (March 29) to 83 events (March 5). The most active dates correspond to periods of high market volatility. BTCUSDT and ETHUSDT contribute similar numbers of events (239 and 213 respectively), allowing us to compare patterns across assets.
 
 ---
 

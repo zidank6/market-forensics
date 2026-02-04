@@ -144,3 +144,16 @@
   - Ended with paper roadmap as required
 - Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%
 ---
+
+## [2026-02-04 16:00] - MF-V3-004
+- Section written: Data
+- Word count: ~370 words
+- Key decisions made:
+  - Structured into three subsections: Data Source, Date Selection, Summary Statistics
+  - Explicitly mentioned data.binance.vision as source
+  - Documented both raw feeds (aggTrades, bookTicker) and canonical format (trades.csv, tob.csv)
+  - Acknowledged intentional bias toward volatile dates and referenced Limitations section
+  - Added per-asset event counts (BTCUSDT: 239, ETHUSDT: 213)
+  - Noted event range across dates (1-83 events per day)
+- Statistics used: 452 events, 17 trading days, BTCUSDT (239 events), ETHUSDT (213 events), date range Jan 3 – Mar 29 2024
+---
