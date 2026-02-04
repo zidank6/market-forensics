@@ -101,19 +101,63 @@ Event counts vary substantially across dates, ranging from 1 event (March 29) to
 ## 4. Methods
 
 <!-- Target: 600-800 words -->
-<!-- TODO: MF-V3-005 -->
 
-[Methods section placeholder - to be written]
+Our methodology consists of four stages: (1) detecting price shock events, (2) extracting analysis windows around each event, (3) detecting onset times for liquidity, price, and volume signals, and (4) classifying events by which signal changed first. We then apply statistical tests to determine whether the observed ordering distribution differs from chance.
 
 ### 4.1 Event Detection
 
+We define a **price shock** as a price movement exceeding a threshold percentage within a rolling time window. Formally, for a time series of mid-prices *p(t)*, we flag an event at time *t* if:
+
+$$\left| \frac{p(t) - p(t - \Delta)}{p(t - \Delta)} \right| \geq \theta$$
+
+where Δ is the rolling window duration (60 seconds) and θ is the threshold (0.5% in our primary analysis). We detect events using mid-prices computed from top-of-book data as *(bid + ask) / 2*.
+
+To avoid counting the same market move multiple times, we apply a de-duplication rule: if multiple threshold crossings occur within the same rolling window, we keep only the event with the largest magnitude. This ensures that a single large price move generates exactly one event, regardless of how many intermediate threshold crossings occur.
+
 ### 4.2 Window Extraction
+
+For each detected event, we extract symmetric windows of market data centered on the event timestamp. The **pre-event window** contains the 300 seconds before the event (not including the event timestamp). The **post-event window** contains the 300 seconds starting from the event timestamp.
+
+When events occur close together in time, their windows may overlap. We handle this by keeping only the first event in each non-overlapping sequence. Specifically, if a second event's timestamp falls within the first event's post-window, we exclude the second event. This ensures each analysis window represents an independent observation.
+
+For each window, we extract:
+- **Top-of-book data**: Bid price, ask price, and their quantities at each book update
+- **Trade data**: Individual trade executions with price, size, and direction
 
 ### 4.3 Onset Detection
 
+For each signal (liquidity, price, volume), we detect the **onset time**—the first moment in the post-event window when that signal deviates significantly from its pre-event baseline. We use a threshold-based approach calibrated to each signal's variance.
+
+**Baseline computation.** For each signal, we compute the mean (μ) and standard deviation (σ) from the pre-event window. For liquidity, we use bid-ask spread values. For price, we use mid-prices. For volume, we aggregate trade sizes into 5-second buckets and compute statistics over bucket volumes.
+
+**Threshold crossing.** We flag an onset when the signal first exceeds μ + *k*σ in the post-event window, where *k* = 2.0 (configurable). The specific conditions are:
+
+- **Liquidity onset**: Spread exceeds baseline + 2σ (spread widening indicates liquidity withdrawal)
+- **Price onset**: Mid-price moves beyond baseline ± 2σ (direction depends on whether the event was an up or down shock)
+- **Volume onset**: 5-second bucket volume exceeds baseline + 2σ
+
+If a signal never crosses its threshold in the post-window, we record no onset for that signal. If the baseline standard deviation is near zero (insufficient variation), we use a small fraction of the baseline value as a minimum threshold to avoid degeneracy.
+
 ### 4.4 Classification Scheme
 
+We classify each event based on which signal's onset occurs first:
+
+- **Liquidity-first**: Spread onset precedes both price and volume onsets
+- **Price-first**: Price onset precedes both spread and volume onsets
+- **Volume-first**: Volume onset precedes both spread and price onsets
+- **Undetermined**: Fewer than two signals crossed their thresholds
+
+Events classified as "undetermined" are excluded from statistical analysis, as they provide no information about relative ordering.
+
 ### 4.5 Statistical Tests
+
+We test whether the observed proportion of liquidity-first events differs from chance. Under a null hypothesis of no systematic ordering, we expect each of the three categories to occur with equal probability (33.3%).
+
+**Binomial test.** We treat the liquidity-first count as a binomial random variable with *n* = 452 trials and null success probability *p*₀ = 1/3. We compute the two-sided p-value for the observed proportion (44.25%).
+
+**Bootstrap confidence interval.** We construct a 95% confidence interval for the true liquidity-first proportion using the percentile bootstrap method with 1,000 resamples and a fixed random seed for reproducibility. If this interval excludes the null proportion (33.3%), we consider the result robust.
+
+Figure 3 illustrates the methodology on an example event, showing the temporal progression of spread, price, and volume signals around a detected price shock.
 
 ---
 

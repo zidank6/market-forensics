@@ -157,3 +157,16 @@
   - Noted event range across dates (1-83 events per day)
 - Statistics used: 452 events, 17 trading days, BTCUSDT (239 events), ETHUSDT (213 events), date range Jan 3 – Mar 29 2024
 ---
+
+## [2026-02-04 16:30] - MF-V3-005
+- Section written: Methods
+- Word count: ~731 words
+- Key decisions made:
+  - Structured into five subsections matching implementation: Event Detection, Window Extraction, Onset Detection, Classification Scheme, Statistical Tests
+  - Included formal equation for price shock detection
+  - Documented all parameter values from config: 0.5% threshold, 60s rolling window, 300s pre/post windows, k=2.0 std multiplier
+  - Explained de-duplication rule for overlapping events
+  - Referenced Figure 3 for methodology illustration
+  - Used precise terminology: "onset time", "baseline", "threshold crossing"
+- Statistics used: 452 events (n in binomial test), 44.25% observed proportion, 33.3% null proportion, 1000 bootstrap resamples
+---

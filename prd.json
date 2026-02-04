@@ -88,7 +88,7 @@
             "id": "MF-V3-005",
             "title": "Write Methods section",
             "priority": 5,
-            "passes": false,
+            "passes": true,
             "description": "Formalize the methodology with equations, algorithms, and clear definitions.",
             "acceptanceCriteria": [
                 "~600-800 words",
