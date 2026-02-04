@@ -1,79 +1,220 @@
 {
     "project": "market-forensics",
-    "branchName": "feat/replication-robustness",
+    "branchName": "feat/research-paper-v3",
+    "paperContext": {
+        "title": "Liquidity Withdrawal Precedes Price Shocks: Evidence from Cryptocurrency Futures",
+        "targetVenue": "Technical report / arXiv preprint",
+        "styleGuide": "Anthropic technical reports (clear, honest, rigorous)",
+        "coreContribution": "Empirical evidence that liquidity changes precede price shocks at statistically significant rates in crypto futures markets"
+    },
+    "v2Results": {
+        "totalEvents": 452,
+        "counts": {
+            "liquidity-first": 200,
+            "price-first": 186,
+            "volume-first": 66
+        },
+        "observedProportion": 0.4425,
+        "nullProportion": 0.3333,
+        "pValue": 2e-06,
+        "bootstrapCI": {
+            "lower": 0.396,
+            "upper": 0.4867
+        }
+    },
     "userStories": [
         {
-            "id": "MF-010",
-            "title": "Canonicalize additional BTCUSDT trading days",
+            "id": "MF-V3-001",
+            "title": "Create paper skeleton with full section structure",
             "priority": 1,
-            "passes": true,
-            "description": "Prepare canonical data for at least 2 additional BTCUSDT trading days beyond 2024-03-28 to enable multi-day replication analysis.",
+            "passes": false,
+            "description": "Set up the paper directory structure and create main.md with all sections, target word counts, and placeholder content.",
             "acceptanceCriteria": [
-                "Run canonicalize_binance_um_day.py for at least 2 additional dates.",
-                "Each date produces trades.csv and tob.csv in data/binance/futures_um/BTCUSDT/canonical/{date}/.",
-                "Document selected dates in a config or manifest file."
+                "Create paper/ directory",
+                "Create paper/main.md with section skeleton",
+                "Include target word counts for each section",
+                "Add figure placeholders with captions",
+                "Create paper/figures/ directory",
+                "Create paper/references.md placeholder"
             ]
         },
         {
-            "id": "MF-011",
-            "title": "Create multi-day pipeline runner script",
+            "id": "MF-V3-002",
+            "title": "Write Abstract (200 words)",
             "priority": 2,
-            "passes": true,
-            "description": "Create a wrapper script that runs the existing pipeline on multiple dates specified in a config, without modifying core src/ code.",
+            "passes": false,
+            "description": "Draft a compelling abstract that clearly states problem, method, result, and implication in Anthropic style.",
             "acceptanceCriteria": [
-                "Create scripts/run_replication.py that accepts a list of dates.",
-                "Script runs python -m src.market_forensics.run for each date with appropriate config overrides.",
-                "Each run outputs to outputs/{date}/ to keep results separate.",
-                "No modifications to src/market_forensics/."
+                "Under 250 words",
+                "States the problem: understanding price shock genesis",
+                "Summarizes method: event detection + onset timing",
+                "Reports key result: 44% vs 33% null, p < 10^-5",
+                "States implication carefully (no overclaiming)",
+                "Matches Anthropic's clear, direct style"
             ]
         },
         {
-            "id": "MF-012",
-            "title": "Run pipeline on 3+ distinct trading days",
+            "id": "MF-V3-003",
+            "title": "Write Introduction section",
             "priority": 3,
-            "passes": true,
-            "description": "Execute the replication runner on at least 3 distinct BTCUSDT trading days and verify each produces ordering results.",
+            "passes": false,
+            "description": "Write the introduction motivating the problem, stating the research question, and listing contributions.",
             "acceptanceCriteria": [
-                "Pipeline runs successfully on at least 3 dates.",
-                "Each run produces event_orderings.csv (or equivalent) in its output directory.",
-                "No errors or hangs during execution."
+                "~400-500 words",
+                "Motivates: price shocks matter, understanding genesis is valuable",
+                "States research question clearly",
+                "Lists 3 contributions (empirical finding, methodology, dataset)",
+                "Ends with paper roadmap",
+                "Avoids jargon in opening paragraph"
             ]
         },
         {
-            "id": "MF-013",
-            "title": "Aggregate ordering outcomes into summary table",
+            "id": "MF-V3-004",
+            "title": "Write Data section",
             "priority": 4,
-            "passes": true,
-            "description": "Create a script that collects ordering classifications from all multi-day runs into a single replication_summary.csv.",
+            "passes": false,
+            "description": "Document data sources, date selection rationale, and provide summary statistics.",
             "acceptanceCriteria": [
-                "Create scripts/aggregate_results.py that reads outputs/{date}/metrics/event_orderings.csv.",
-                "Produces outputs/replication_summary.csv with columns: date, events_detected, windows_extracted, liquidity_first_count, price_first_count, trade_first_count.",
-                "Summary accurately reflects data from all processed dates."
+                "~300-400 words",
+                "States data source (Binance USD-M Futures, data.binance.vision)",
+                "Lists assets (BTCUSDT, ETHUSDT)",
+                "Explains date selection strategy (high volatility days)",
+                "Includes data summary table (dates, events per day, etc.)",
+                "References canonical format (trades.csv, tob.csv)",
+                "Mentions total data volume (~60GB canonical)"
             ]
         },
         {
-            "id": "MF-014",
-            "title": "Run threshold sensitivity analysis",
+            "id": "MF-V3-005",
+            "title": "Write Methods section",
             "priority": 5,
-            "passes": true,
-            "description": "Run the pipeline on a single date with varying thresholds (0.4%, 0.5%, 0.6%) to check if ordering results are stable.",
+            "passes": false,
+            "description": "Formalize the methodology with equations, algorithms, and clear definitions.",
             "acceptanceCriteria": [
-                "Create scripts/run_sensitivity.py that varies price_shock_threshold_pct.",
-                "Runs pipeline 3 times with thresholds: 0.4, 0.5, 0.6.",
-                "Produces outputs/sensitivity_summary.csv showing ordering counts by threshold.",
-                "Uses config overrides, not hardcoded source changes."
+                "~600-800 words",
+                "Event detection: threshold-based price shock definition",
+                "Window extraction: pre/post event windows",
+                "Onset detection: k×std threshold crossing formalized",
+                "Classification scheme: liquidity-first, price-first, volume-first",
+                "Statistical tests: binomial test, bootstrap CI specifications",
+                "Includes equation for onset detection",
+                "References Figure showing example event window"
             ]
         },
         {
-            "id": "MF-015",
-            "title": "Generate final research summary",
+            "id": "MF-V3-006",
+            "title": "Write Results section with statistics",
             "priority": 6,
-            "passes": true,
-            "description": "Produce a clean markdown summary of replication and sensitivity results suitable for inclusion in a research writeup.",
+            "passes": false,
+            "description": "Present the main findings with all statistics and references to figures.",
             "acceptanceCriteria": [
-                "Create outputs/replication_report.md with: dates analyzed, event counts, ordering breakdown table, sensitivity findings.",
-                "All numbers are derived from generated CSVs (not hardcoded).",
-                "Report answers: 'Is liquidity-first ordering consistent across days and thresholds?'"
+                "~500-700 words",
+                "States main result upfront: 44.25% liquidity-first",
+                "Reports statistical significance (p = 2×10^-6)",
+                "Reports 95% CI [39.6%, 48.7%]",
+                "Compares to null hypothesis (33.3%)",
+                "Shows asset comparison (BTC vs ETH proportions)",
+                "Reports threshold sensitivity results",
+                "References all figures correctly"
+            ]
+        },
+        {
+            "id": "MF-V3-007",
+            "title": "Write Discussion section",
+            "priority": 7,
+            "passes": false,
+            "description": "Interpret findings carefully, address alternative explanations, and connect to theory.",
+            "acceptanceCriteria": [
+                "~400-500 words",
+                "Interprets finding: what does liquidity-first suggest?",
+                "Addresses alternative explanations (latency, threshold artifacts, etc.)",
+                "Connects to market microstructure theory (informed trading, market makers)",
+                "Does NOT claim causality",
+                "Does NOT propose trading strategies",
+                "Uses hedged language appropriately"
+            ]
+        },
+        {
+            "id": "MF-V3-008",
+            "title": "Write comprehensive Limitations section",
+            "priority": 8,
+            "passes": false,
+            "description": "Write an honest, comprehensive limitations section matching Anthropic's intellectual honesty style.",
+            "acceptanceCriteria": [
+                "~400-500 words",
+                "Single exchange limitation",
+                "Top-of-book only (no full depth)",
+                "Thresholds are somewhat arbitrary",
+                "Date selection may bias toward exciting events",
+                "Timestamp precision limits",
+                "No causal identification (correlation only)",
+                "Latency artifacts possible",
+                "Explains what would strengthen claims",
+                "Written in first person, directly honest style"
+            ]
+        },
+        {
+            "id": "MF-V3-009",
+            "title": "Write Related Work section",
+            "priority": 9,
+            "passes": false,
+            "description": "Survey relevant literature and position this work.",
+            "acceptanceCriteria": [
+                "~300-400 words",
+                "Market microstructure fundamentals (Kyle, Glosten-Milgrom)",
+                "Liquidity-volatility relationships",
+                "Crypto market microstructure (recent work)",
+                "Event study methodology in finance",
+                "Position this work in the literature"
+            ]
+        },
+        {
+            "id": "MF-V3-010",
+            "title": "Write Conclusion section",
+            "priority": 10,
+            "passes": false,
+            "description": "Write a concise conclusion restating the contribution and future work.",
+            "acceptanceCriteria": [
+                "~200-250 words",
+                "Restates the core finding",
+                "Emphasizes what this work contributes",
+                "Lists 2-3 future work directions",
+                "Ends with measured closing thought",
+                "Does NOT introduce new material"
+            ]
+        },
+        {
+            "id": "MF-V3-011",
+            "title": "Create publication-quality figures",
+            "priority": 11,
+            "passes": false,
+            "description": "Generate polished figures for the paper with proper styling.",
+            "acceptanceCriteria": [
+                "Figure 1: Ordering proportions bar chart (styled for publication)",
+                "Figure 2: Onset delta histogram (styled for publication)",
+                "Figure 3: Example event window showing liquidity/price/volume",
+                "All figures have proper axis labels, legends",
+                "All figures have descriptive captions",
+                "High resolution exports (300 DPI minimum)",
+                "Consistent color scheme across figures",
+                "Save to paper/figures/"
+            ]
+        },
+        {
+            "id": "MF-V3-012",
+            "title": "Final editing and consistency pass",
+            "priority": 12,
+            "passes": false,
+            "description": "Review the complete paper for consistency, accuracy, and polish.",
+            "acceptanceCriteria": [
+                "All statistics match outputs/v2_stats.json",
+                "Figure references are correct",
+                "Section ordering is logical",
+                "No placeholder text remains",
+                "Consistent terminology throughout",
+                "Grammar and spelling checked",
+                "Add placeholder references in references.md",
+                "Create appendix.md with date list and additional tables"
             ]
         }
     ]

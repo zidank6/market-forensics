@@ -1,204 +1,282 @@
 # Product Requirements Document (PRD)
 
 ## Project Title
-**Crypto Market Microstructure Event Analysis System**
+**Market Forensics v3: Research Paper on Liquidity Precedence**
 
 ## Version
-v1.0 (Concept Lock)
+v3.0
 
 ## Status
-Definition / Research Design Phase
+Ready for Implementation
 
 ## Owner
 Zidan Kazi
 
 ---
 
-## 1. Problem Statement
+## 1. What v2 Proved
 
-Crypto markets frequently experience sudden, sharp price movements. These events are typically discussed in terms of *price* and *volatility*, but price alone does not explain **what actually broke first** inside the market.
+Market Forensics v2 demonstrated that:
 
-Existing analysis often answers *what happened*, not *how it unfolded mechanically*. Two identical price crashes can be driven by very different underlying mechanisms:
-- liquidity withdrawal
-- aggressive trading
-- reflexive feedback loops
+> When sharp price shocks occur in cryptocurrency futures, **liquidity deterioration (spread widening) precedes price movements** at a statistically significant rate.
 
-Without reconstructing the **temporal sequence** of internal market changes, it is impossible to distinguish between these failure modes.
+### v2 Results Summary
 
-This project aims to systematically reconstruct and analyze the **order in which market components change** during short-term stress events in crypto markets.
+| Metric | Value |
+|--------|-------|
+| Total events analyzed | 452 |
+| Liquidity-first events | 200 (44.25%) |
+| Price-first events | 186 (41.15%) |
+| Volume-first events | 66 (14.60%) |
+| Binomial p-value | 2×10⁻⁶ |
+| 95% Bootstrap CI | [39.6%, 48.7%] |
+| Null hypothesis (3-class uniform) | 33.3% |
 
----
+**The 95% confidence interval excludes 33%, and the p-value is highly significant (p < 0.001).**
 
-## 2. Goal
-
-Build a **reproducible, defensible research system** that answers the question:
-
-> *When crypto markets move suddenly, what changes first: liquidity, trading behavior, or price?*
-
-The system will analyze real historical data to identify stress events and reconstruct their microstructure evolution.
-
-The goal is **understanding**, not prediction or trading performance.
+This is a publishable finding.
 
 ---
 
-## 3. Non-Goals
+## 2. v3 Goal
 
-The system explicitly does **not** attempt to:
-- predict future prices
-- generate trading signals or strategies
-- optimize execution or profitability
-- simulate agents or synthetic markets
-- explain macroeconomic or news causality
+**Transform empirical findings into a publication-quality research paper.**
 
-This is an **observational and forensic** analysis tool.
+v3 answers one question:
 
----
+> Can we communicate this finding with the clarity, rigor, and intellectual honesty characteristic of top-tier AI safety and market microstructure research?
 
-## 4. Scope
-
-### In Scope
-- One centralized exchange
-- Real historical data
-- Short event windows (seconds to minutes)
-- BTC, ETH, SOL as primary assets
-- Event-based analysis (not continuous forecasting)
-
-### Out of Scope (v1)
-- Cross-exchange arbitrage
-- Full L2/L3 order book reconstruction
-- News or sentiment ingestion
-- Real-time streaming
-- User-facing dashboards
+Target style: **Anthropic technical reports** (claude model cards, constitutional AI papers, etc.)
+- Clear problem statements
+- Honest limitations
+- Reproducible methodology
+- Visual clarity
+- Meaningful contributions stated upfront
 
 ---
 
-## 5. Core Concept
+## 3. Practical Constraints
 
-Markets are composed of a small number of mechanical components:
-- **Liquidity** (standing orders / spread)
-- **Trading behavior** (trade frequency, size, aggressiveness)
-- **Price** (last executed trade)
+**Single-author academic paper** — needs to be defensible, not oversold.
 
-During stress events, these components do not necessarily change simultaneously.
-
-This system identifies **which component reacts first**, and how the others follow.
+### Scoping Decision
+- **One core claim**: Liquidity changes precede price shocks at above-chance rates
+- **No causal claims**: Correlation only, stated explicitly
+- **Reproducibility focus**: All code and data sources documented
+- **Honest limitations section**: As important as findings
 
 ---
 
-## 6. Key Definitions
+## 4. Non-Goals
 
-### Stress Event
-A short time interval where price changes rapidly relative to recent history (e.g. X% within Y seconds).
+The paper explicitly does **not** attempt to:
+- Claim causality or prediction capability
+- Propose trading strategies or alpha signals
+- Generalize beyond the specific assets/dates analyzed
+- Make market efficiency claims
+- Recommend policy interventions
 
-### Event Window
-A fixed time slice surrounding a stress event:
-- Pre-event window (e.g. 1–5 minutes)
-- Post-event window (e.g. 1–5 minutes)
+---
 
-### Reaction Sequence
-The observed ordering in time of:
-1. Liquidity changes
-2. Trading behavior changes
-3. Price movement
+## 5. Success Criteria
+
+v3 succeeds if the paper:
+
+| Criterion | Target |
+|-----------|--------|
+| Length | 8-15 pages (excluding appendix) |
+| Figures | 3-5 publication-quality visualizations |
+| Abstract | <250 words, states contribution clearly |
+| Limitations | Comprehensive and honest |
+| Reproducibility | Full methodology documented |
+| Style | Matches Anthropic technical report quality |
+
+---
+
+## 6. Paper Structure
+
+### Target Outline
+
+1. **Abstract** (~200 words)
+   - Problem: Price shocks cause losses; understanding their genesis matters
+   - Method: Event detection + onset timing across 452 events
+   - Result: Liquidity precedes price 44% vs 33% null (p < 10⁻⁵)
+   - Implication: Suggests informed traders' footprint in order book
+
+2. **Introduction** (~1 page)
+   - Market microstructure during stress events
+   - Why temporal ordering matters
+   - Paper contributions (3 bullet points max)
+
+3. **Related Work** (~0.5 page)
+   - Prior work on liquidity-volatility relationships
+   - Event study methodology in finance
+   - Crypto market microstructure research
+
+4. **Data** (~1 page)
+   - Source: Binance USD-M Futures
+   - Assets: BTCUSDT, ETHUSDT
+   - Date selection: High-volatility days (ETF approval, ATH runs)
+   - Data volume: 31 days, ~60GB canonical data
+
+5. **Methods** (~2 pages)
+   - Event detection algorithm
+   - Window extraction
+   - Onset detection (k×std threshold crossing)
+   - Classification scheme
+   - Statistical tests (binomial, bootstrap)
+
+6. **Results** (~2 pages)
+   - Main finding: 44.25% liquidity-first
+   - Statistical significance
+   - Asset comparison (BTC vs ETH)
+   - Threshold sensitivity analysis
+
+7. **Discussion** (~1 page)
+   - Interpretation: What does liquidity-first ordering suggest?
+   - Alternative explanations
+   - Connection to market maker behavior
+
+8. **Limitations** (~1 page)
+   - Single exchange
+   - Top-of-book only
+   - Threshold sensitivity
+   - Date selection bias
+   - Timestamp precision
+   - No causal identification
+
+9. **Conclusion** (~0.5 page)
+   - Summary of contribution
+   - Future work directions
+
+10. **Appendix**
+    - Full date list
+    - Additional figures
+    - Sensitivity tables
+    - Code availability statement
 
 ---
 
 ## 7. Functional Requirements
 
-### FR-1: Data Ingestion
-- Load historical trade data
-- Load best bid / best ask (top-of-book) data
-- Support BTC, ETH, SOL for a single exchange
+### FR-1: Create paper skeleton
+- Create `paper/main.md` with full section structure
+- Include placeholder sections with target word counts
+- Add figure placeholders with captions
 
-### FR-2: Event Detection
-- Scan historical data to identify sudden price moves
-- Parameterized thresholds (configurable)
-- Produce a list of event timestamps
+### FR-2: Write Abstract
+- Draft compelling 200-word abstract
+- State problem, method, result, implication
+- Follow Anthropic style (clear, direct, no hype)
 
-### FR-3: Window Extraction
-- Extract standardized pre- and post-event windows
-- Ensure consistent time alignment
-- Handle overlapping events deterministically
+### FR-3: Write Introduction
+- Motivate the problem (price shocks, market fragility)
+- State the research question clearly
+- List contributions (max 3)
+- End with paper roadmap
 
-### FR-4: Metric Computation
-Compute simple, interpretable metrics:
-- Trade count
-- Trade volume
-- Average trade size
-- Bid–ask spread
-- Price volatility
+### FR-4: Write Data Section
+- Document data sources completely
+- Explain date selection rationale
+- Include data summary table
+- Reference canonical format
 
-### FR-5: Temporal Ordering Analysis
-- Determine which metrics change first relative to event onset
-- Compare timing across assets
-- Aggregate patterns across many events
+### FR-5: Write Methods Section
+- Event detection algorithm (pseudo-code or equations)
+- Onset detection formalization
+- Classification scheme
+- Statistical test specifications
+- Figure: example event window
 
-### FR-6: Output Artifacts
-- Reproducible plots
-- Tables summarizing reaction sequences
-- Saved intermediate datasets
+### FR-6: Write Results Section
+- Present main findings with statistics
+- Include key visualizations:
+  - Ordering proportions bar chart
+  - Onset delta histogram
+  - BTC vs ETH comparison
+- Threshold sensitivity analysis
 
----
+### FR-7: Write Discussion Section
+- Interpret findings carefully
+- Address alternative explanations
+- Connect to market microstructure theory
+- Avoid overclaiming
 
-## 8. Non-Functional Requirements
+### FR-8: Write Limitations Section
+- Comprehensive and honest
+- Address each limitation directly
+- Explain what would strengthen claims
+- Match Anthropic's "we're not sure about X" style
 
-### Reproducibility
-- Deterministic runs
-- Config-driven experiment definitions
-- Clear data provenance
+### FR-9: Write Conclusion
+- Restate contribution
+- Future work directions
+- Closing thought
 
-### Interpretability
-- No black-box models
-- Metrics must have clear physical meaning
+### FR-10: Write Related Work
+- Market microstructure literature
+- Liquidity-volatility relationships
+- Crypto market research
+- Event study methodology
 
-### Transparency
-- Explicit assumptions
-- Documented limitations
+### FR-11: Create publication-quality figures
+- Regenerate figures with publication styling
+- Add proper axis labels, legends, captions
+- Ensure figures are self-contained
+- Export as high-res PNGs
 
----
-
-## 9. Data Strategy
-
-### Initial Data Types
-- Trades (timestamp, price, size)
-- Best bid / best ask (timestamp, prices)
-
-### Constraints
-- Prefer free or publicly accessible datasets
-- Accept reduced depth in exchange for broader time coverage
-
----
-
-## 10. Validation Strategy
-
-Results will be validated through:
-- Sensitivity analysis (varying thresholds, window sizes)
-- Cross-asset comparison
-- Manual inspection of representative events
-
----
-
-## 11. Success Criteria
-
-The project is successful if:
-- A consistent methodology is implemented
-- Clear reaction sequences are observed
-- Results can be explained in plain language
-- A serious technical reader can reproduce and critique findings
+### FR-12: Final editing pass
+- Check consistency throughout
+- Verify all statistics match outputs
+- Proofread and polish
+- Add references placeholders
 
 ---
 
-## 12. Final Deliverables
+## 8. Deliverables
 
-At least one of the following:
-- A research-style writeup (PDF or markdown)
-- A public reproducible repository
-- A structured technical report with figures and tables
+| Deliverable | Description |
+|-------------|-------------|
+| `paper/main.md` | Full paper in markdown |
+| `paper/figures/` | Publication-quality figures |
+| `paper/references.md` | Bibliography/references |
+| `paper/appendix.md` | Supplementary materials |
 
 ---
 
-## 13. Guiding Principle
+## 9. Style Guide
 
-> *This system exists to see clearly, not to impress.*
+### Anthropic-Style Writing Principles
 
-If a result is boring but real, it is preferred over a clever but fragile claim.
+1. **Clarity over cleverness**
+   - Simple sentence structure
+   - Define terms before using them
+   - Avoid jargon unless necessary
+
+2. **Intellectual honesty**
+   - State what you don't know
+   - Quantify uncertainty
+   - Avoid overclaiming
+
+3. **Structured presentation**
+   - Use numbered lists for contributions
+   - Use tables for comparisons
+   - Use figures for visual concepts
+
+4. **Direct language**
+   - "We find X" not "X was found"
+   - "This suggests Y" not "It might be possible that Y"
+   - "We don't know Z" not "Further research is needed to determine Z"
+
+5. **Results-first framing**
+   - Lead with findings
+   - Explain methodology second
+   - Discuss implications third
+
+---
+
+## 10. Guiding Principle
+
+> *Understate the contribution; let the data speak.*
+
+A paper that honestly reports a small, well-supported finding is more valuable than one that overclaims a larger effect with weaker evidence.
