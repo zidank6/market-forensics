@@ -1,0 +1,159 @@
+# Liquidity Withdrawal Precedes Price Shocks: Evidence from Cryptocurrency Futures
+
+**Authors:** [Author names to be added]
+
+**Date:** February 2026
+
+---
+
+## Abstract
+
+<!-- Target: 200-250 words -->
+<!-- TODO: MF-V3-002 -->
+
+[Abstract placeholder - to be written]
+
+---
+
+## 1. Introduction
+
+<!-- Target: 400-500 words -->
+<!-- TODO: MF-V3-003 -->
+
+[Introduction placeholder - to be written]
+
+---
+
+## 2. Related Work
+
+<!-- Target: 300-400 words -->
+<!-- TODO: MF-V3-009 -->
+
+[Related work placeholder - to be written]
+
+---
+
+## 3. Data
+
+<!-- Target: 300-400 words -->
+<!-- TODO: MF-V3-004 -->
+
+[Data section placeholder - to be written]
+
+### 3.1 Data Source
+
+### 3.2 Date Selection
+
+### 3.3 Summary Statistics
+
+**Table 1: Data Summary**
+
+| Metric | Value |
+|--------|-------|
+| Assets | BTCUSDT, ETHUSDT |
+| Trading days | 17 |
+| Total events detected | 452 |
+| Data source | Binance USD-M Futures |
+| Data types | aggTrades, bookTicker |
+
+---
+
+## 4. Methods
+
+<!-- Target: 600-800 words -->
+<!-- TODO: MF-V3-005 -->
+
+[Methods section placeholder - to be written]
+
+### 4.1 Event Detection
+
+### 4.2 Window Extraction
+
+### 4.3 Onset Detection
+
+### 4.4 Classification Scheme
+
+### 4.5 Statistical Tests
+
+---
+
+## 5. Results
+
+<!-- Target: 500-700 words -->
+<!-- TODO: MF-V3-006 -->
+
+[Results section placeholder - to be written]
+
+### 5.1 Main Finding
+
+### 5.2 Statistical Significance
+
+### 5.3 Asset Comparison
+
+### 5.4 Threshold Sensitivity
+
+**Figure 1: Ordering Proportions**
+
+![Ordering proportions across all detected events](figures/fig1_ordering_proportions.png)
+
+*Figure 1: Distribution of ordering classifications across 452 detected price shock events. Liquidity-first events (44.25%) significantly exceed the null expectation of 33.3% under uniform distribution (p < 0.001).*
+
+**Figure 2: Onset Delta Distribution**
+
+![Distribution of onset time differences](figures/fig2_onset_deltas.png)
+
+*Figure 2: Histogram of onset time differences (liquidity onset minus price onset) for events where both signals were detected. Negative values indicate liquidity changed before price.*
+
+**Figure 3: Example Event**
+
+![Example event showing liquidity withdrawal preceding price shock](figures/fig3_example_event.png)
+
+*Figure 3: Example event window showing the temporal sequence of spread widening (top), price movement (middle), and volume activity (bottom). Vertical dashed line marks the detected price shock timestamp.*
+
+---
+
+## 6. Discussion
+
+<!-- Target: 400-500 words -->
+<!-- TODO: MF-V3-007 -->
+
+[Discussion section placeholder - to be written]
+
+### 6.1 Interpretation
+
+### 6.2 Alternative Explanations
+
+### 6.3 Connection to Market Microstructure Theory
+
+---
+
+## 7. Limitations
+
+<!-- Target: 400-500 words -->
+<!-- TODO: MF-V3-008 -->
+
+[Limitations section placeholder - to be written]
+
+---
+
+## 8. Conclusion
+
+<!-- Target: 200-250 words -->
+<!-- TODO: MF-V3-010 -->
+
+[Conclusion placeholder - to be written]
+
+---
+
+## References
+
+See [references.md](references.md) for full bibliography.
+
+---
+
+## Appendix
+
+See [appendix.md](appendix.md) for supplementary materials including:
+- Complete list of analysis dates
+- Additional robustness checks
+- Per-asset breakdown tables
