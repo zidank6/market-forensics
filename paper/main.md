@@ -164,29 +164,74 @@ Figure 3 illustrates the methodology on an example event, showing the temporal p
 ## 5. Results
 
 <!-- Target: 500-700 words -->
-<!-- TODO: MF-V3-006 -->
-
-[Results section placeholder - to be written]
 
 ### 5.1 Main Finding
 
-### 5.2 Statistical Significance
+Liquidity withdrawal precedes price shocks at a rate significantly above chance. Of 452 detected price shock events, 200 (44.25%) show liquidity changing first, compared to 186 (41.15%) price-first and 66 (14.60%) volume-first events. Figure 1 shows this distribution.
 
-### 5.3 Asset Comparison
-
-### 5.4 Threshold Sensitivity
+Under a null hypothesis of no systematic ordering, we would expect each category to occur with probability 1/3 (33.3%). The observed liquidity-first proportion of 44.25% exceeds this null expectation by approximately 11 percentage points. The relative scarcity of volume-first events (14.60%) suggests that volume changes are less likely to precede price shocks than either liquidity or price signals.
 
 **Figure 1: Ordering Proportions**
 
 ![Ordering proportions across all detected events](figures/fig1_ordering_proportions.png)
 
-*Figure 1: Distribution of ordering classifications across 452 detected price shock events. Liquidity-first events (44.25%) significantly exceed the null expectation of 33.3% under uniform distribution (p < 0.001).*
+*Figure 1: Distribution of ordering classifications across 452 detected price shock events. Liquidity-first events (44.25%) significantly exceed the null expectation of 33.3% under uniform distribution.*
+
+### 5.2 Statistical Significance
+
+We apply two statistical tests to assess whether the observed liquidity-first proportion differs meaningfully from chance.
+
+**Binomial test.** Treating the 200 liquidity-first events as successes in 452 Bernoulli trials with null probability p₀ = 1/3, we compute a two-sided p-value of 2 × 10⁻⁶. This result is significant at both α = 0.05 and α = 0.01.
+
+**Bootstrap confidence interval.** Using the percentile bootstrap method with 1,000 resamples, we construct a 95% confidence interval for the true liquidity-first proportion: [39.6%, 48.7%]. This interval excludes the null hypothesis proportion of 33.3%, providing additional evidence that the observed pattern is unlikely to arise from chance.
+
+Together, these tests suggest that the liquidity-first ordering we observe is statistically robust. However, statistical significance does not establish that this pattern is practically meaningful or that it reflects a causal relationship—only that random variation is an unlikely explanation.
+
+### 5.3 Asset Comparison
+
+We compare the ordering distribution across our two assets: BTCUSDT (Bitcoin perpetual) and ETHUSDT (Ethereum perpetual).
+
+**Table 2: Ordering Classification by Asset**
+
+| Classification | BTCUSDT (n=239) | ETHUSDT (n=213) |
+|----------------|-----------------|-----------------|
+| Liquidity-first | 110 (46.0%) | 90 (42.3%) |
+| Price-first | 94 (39.3%) | 92 (43.2%) |
+| Volume-first | 35 (14.6%) | 31 (14.6%) |
+
+Both assets show liquidity-first as the most common classification, though BTCUSDT exhibits a somewhat higher liquidity-first rate (46.0%) compared to ETHUSDT (42.3%). The price-first rate is correspondingly higher for ETHUSDT. Volume-first rates are nearly identical across both assets (14.6%).
+
+We hesitate to draw strong conclusions from the asset-level differences. The sample sizes (239 and 213 events) are modest, and we have not tested whether the difference between 46.0% and 42.3% is statistically significant. The similarity in overall patterns across both assets provides some evidence that the liquidity-first tendency is not specific to a single instrument.
+
+### 5.4 Threshold Sensitivity
+
+Our event detection uses a 0.5% price change threshold. To assess whether our findings depend on this choice, we reran the analysis on a subset of data (March 27, 2024) with thresholds of 0.4%, 0.5%, and 0.6%.
+
+**Table 3: Sensitivity to Price Shock Threshold**
+
+| Threshold | Events | Liquidity-first | Price-first | Volume-first |
+|-----------|--------|-----------------|-------------|--------------|
+| 0.4% | 16 | 8 (50.0%) | 7 (43.8%) | 1 (6.3%) |
+| 0.5% | 12 | 6 (50.0%) | 4 (33.3%) | 2 (16.7%) |
+| 0.6% | 8 | 4 (50.0%) | 2 (25.0%) | 2 (25.0%) |
+
+Lower thresholds detect more events (as expected), but the liquidity-first proportion remains stable across all threshold values. At all three thresholds, liquidity-first events constitute 50% of the sample—if anything, higher than the 44.25% observed in the full dataset. This consistency suggests our main finding is not an artifact of the specific threshold choice.
+
+We note that this sensitivity analysis uses a single day of data, so the results should be interpreted cautiously. A comprehensive sensitivity analysis across all 17 days would provide stronger evidence, though the computational cost is substantial.
+
+### 5.5 Onset Time Differences
+
+Figure 2 shows the distribution of onset time differences (liquidity onset time minus price onset time) for events where both signals crossed their thresholds. Negative values indicate liquidity changed before price.
 
 **Figure 2: Onset Delta Distribution**
 
 ![Distribution of onset time differences](figures/fig2_onset_deltas.png)
 
 *Figure 2: Histogram of onset time differences (liquidity onset minus price onset) for events where both signals were detected. Negative values indicate liquidity changed before price.*
+
+The distribution shows a peak near zero, indicating that for many events, liquidity and price signals change nearly simultaneously. The asymmetry toward negative values is consistent with our finding that liquidity changes tend to precede price changes. However, the presence of positive values shows that price-first orderings are also common—the liquidity-first tendency is a statistical pattern, not a universal rule.
+
+Figure 3 illustrates a typical liquidity-first event, showing how spread widening precedes the main price movement.
 
 **Figure 3: Example Event**
 

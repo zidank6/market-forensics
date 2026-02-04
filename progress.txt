@@ -170,3 +170,18 @@
   - Used precise terminology: "onset time", "baseline", "threshold crossing"
 - Statistics used: 452 events (n in binomial test), 44.25% observed proportion, 33.3% null proportion, 1000 bootstrap resamples
 ---
+
+## [2026-02-04 17:00] - MF-V3-006
+- Section written: Results
+- Word count: ~832 words
+- Key decisions made:
+  - Structured into five subsections: Main Finding, Statistical Significance, Asset Comparison, Threshold Sensitivity, Onset Time Differences
+  - Led with main finding as required by style guide (results-first framing)
+  - Included all figures (1, 2, 3) with descriptive captions
+  - Added Table 2 for per-asset breakdown (BTCUSDT vs ETHUSDT)
+  - Added Table 3 for sensitivity analysis results (0.4%, 0.5%, 0.6% thresholds)
+  - Used hedged language throughout ("suggests", "hesitate to draw strong conclusions")
+  - Explicitly noted that statistical significance doesn't imply causation
+  - Acknowledged limitations of single-day sensitivity analysis
+- Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%, BTCUSDT: 239 events (110 liq, 94 price, 35 vol), ETHUSDT: 213 events (90 liq, 92 price, 31 vol)
+---

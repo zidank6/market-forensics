@@ -105,7 +105,7 @@
             "id": "MF-V3-006",
             "title": "Write Results section with statistics",
             "priority": 6,
-            "passes": false,
+            "passes": true,
             "description": "Present the main findings with all statistics and references to figures.",
             "acceptanceCriteria": [
                 "~500-700 words",
