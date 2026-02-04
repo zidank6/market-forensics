@@ -244,15 +244,36 @@ Figure 3 illustrates a typical liquidity-first event, showing how spread widenin
 ## 6. Discussion
 
 <!-- Target: 400-500 words -->
-<!-- TODO: MF-V3-007 -->
 
-[Discussion section placeholder - to be written]
+Our analysis finds that liquidity withdrawal precedes price shocks at a rate significantly above chance. In this section, we discuss what this pattern may indicate, consider alternative explanations, and connect our findings to market microstructure theory. Throughout, we emphasize that our evidence is correlational—we cannot establish that liquidity changes cause subsequent price movements.
 
 ### 6.1 Interpretation
 
+The most straightforward interpretation of our findings is that some market participants reduce their liquidity provision before prices move sharply. This behavior could arise from at least two mechanisms.
+
+First, market makers may detect early signals of directional flow—through their proprietary order flow or inventory positions—and respond by widening spreads or reducing quoted depth. If market makers are faster at processing information than the rate at which prices update, their quotes would adjust before the price shock appears in our data.
+
+Second, informed traders may cancel resting orders before executing aggressive trades that move prices. A trader with private information might first remove their own liquidity (to avoid being adversely filled), then execute the trade that causes the price shock. This sequence would generate the liquidity-first pattern we observe.
+
+We cannot distinguish between these mechanisms with our data. Both are consistent with theories of asymmetric information in market microstructure, and both could operate simultaneously.
+
 ### 6.2 Alternative Explanations
 
+Several alternative explanations could generate the observed pattern without requiring that liquidity changes reflect anticipatory behavior.
+
+**Latency differences.** Our data combines two feeds: bookTicker (order book updates) and aggTrades (executed trades). If these feeds have different latencies, apparent temporal ordering could reflect delivery delays rather than true event sequencing. We do not know the precise latency characteristics of Binance's data feeds.
+
+**Threshold artifacts.** Our onset detection uses a fixed multiplier (2σ) for all signals. If spread variance is inherently lower than price variance, spread changes might cross their threshold more easily, biasing classification toward liquidity-first.
+
+**Mechanical spread widening.** When order book depth thins on one side—perhaps due to the same aggressive orders that will cause the price shock—spreads mechanically widen even without any intentional liquidity withdrawal. The spread change and price change would then be effects of the same cause (order flow imbalance), not a causal sequence.
+
+**Detection asymmetries.** Our volume signal aggregates into 5-second buckets, while spread and price are measured at tick-level resolution. This mismatch may disadvantage volume-first detection, partially explaining the low volume-first rate (14.60%).
+
 ### 6.3 Connection to Market Microstructure Theory
+
+Our findings are consistent with classic models of informed trading. Kyle (1985) describes how informed traders strategically time their orders, while Glosten and Milgrom (1985) model how market makers adjust quotes in response to adverse selection. Both frameworks predict that liquidity conditions should respond to information asymmetry—and our data show liquidity changes preceding price movements at rates above chance.
+
+However, consistency with theory does not establish that these mechanisms explain our observations. The alternative explanations above remain viable. What our evidence does suggest is that the temporal relationship between liquidity and price is not random—there is structure worth investigating further.
 
 ---
 

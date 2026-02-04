@@ -185,3 +185,17 @@
   - Acknowledged limitations of single-day sensitivity analysis
 - Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%, BTCUSDT: 239 events (110 liq, 94 price, 35 vol), ETHUSDT: 213 events (90 liq, 92 price, 31 vol)
 ---
+
+## [2026-02-04 17:30] - MF-V3-007
+- Section written: Discussion
+- Word count: ~511 words
+- Key decisions made:
+  - Structured into three subsections: Interpretation, Alternative Explanations, Connection to Theory
+  - Proposed two mechanisms for liquidity-first pattern: market maker anticipation and informed trader order cancellation
+  - Addressed four alternative explanations: latency differences, threshold artifacts, mechanical spread widening, detection asymmetries
+  - Referenced Kyle (1985) and Glosten-Milgrom (1985) for theoretical grounding
+  - Emphasized correlation-not-causation throughout
+  - Used hedged language ("may indicate", "could arise", "consistent with")
+  - Did NOT claim causality or propose trading strategies
+- Statistics used: 14.60% volume-first rate (referenced in detection asymmetries discussion)
+---

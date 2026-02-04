@@ -122,7 +122,7 @@
             "id": "MF-V3-007",
             "title": "Write Discussion section",
             "priority": 7,
-            "passes": false,
+            "passes": true,
             "description": "Interpret findings carefully, address alternative explanations, and connect to theory.",
             "acceptanceCriteria": [
                 "~400-500 words",
