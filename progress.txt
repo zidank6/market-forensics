@@ -212,3 +212,16 @@
   - Referenced sensitivity analysis results as partial mitigation for threshold concerns
 - Statistics used: 0.5% price change threshold, 2σ onset threshold (parameter references)
 ---
+
+## [2026-02-04 18:00] - MF-V3-009
+- Section written: Related Work
+- Word count: ~365 words
+- Key decisions made:
+  - Organized into five themes: fundamentals (Kyle, Glosten-Milgrom), liquidity-volatility, crypto microstructure, event study methodology, positioning
+  - Referenced Kyle (1985) and Glosten-Milgrom (1985) as theoretical foundations
+  - Connected to flight-to-quality literature for liquidity-volatility relationship
+  - Noted crypto markets research as growing area with 24/7 trading, no circuit breakers
+  - Explicitly positioned this work as empirical, focused on temporal ordering
+  - Used hedged language ("consistent with", "may be relevant")
+- Statistics used: None (literature review section)
+---

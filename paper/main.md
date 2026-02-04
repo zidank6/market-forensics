@@ -51,9 +51,18 @@ The remainder of this paper is organized as follows. Section 2 reviews related w
 ## 2. Related Work
 
 <!-- Target: 300-400 words -->
-<!-- TODO: MF-V3-009 -->
 
-[Related work placeholder - to be written]
+Our work relates to several strands of research in market microstructure, liquidity dynamics, and cryptocurrency markets.
+
+**Market microstructure fundamentals.** The theoretical foundation for our analysis draws on classic models of trading with asymmetric information. Kyle (1985) models how informed traders strategically choose order sizes to maximize profits while concealing their information. Glosten and Milgrom (1985) show how market makers set bid-ask spreads to protect against adverse selection from informed traders. Both models predict that liquidity conditions should respond to the presence of informed trading—a prediction consistent with our observation that liquidity changes often precede price movements.
+
+**Liquidity and volatility.** A substantial literature examines the relationship between liquidity and price volatility. Research has documented that liquidity tends to deteriorate during periods of high volatility (the "flight to quality" effect) and that liquidity provision itself can be destabilizing when market makers withdraw simultaneously. Our study contributes to this literature by examining the temporal ordering of liquidity and price changes at high frequency, rather than their contemporaneous correlation.
+
+**Cryptocurrency market microstructure.** The microstructure of cryptocurrency markets has received growing attention as these markets have matured. Studies have examined the efficiency of cryptocurrency pricing, the role of arbitrage across exchanges, and the behavior of market makers in 24/7 markets without circuit breakers. Our work adds to this literature by providing evidence on the temporal dynamics of liquidity around price shocks in perpetual futures markets, which are among the most actively traded cryptocurrency instruments.
+
+**Event study methodology.** Our approach shares features with event study methods common in empirical finance, where researchers examine market variables around specific events (earnings announcements, policy changes, etc.). We adapt this approach to high-frequency market microstructure, defining events based on price movements rather than external announcements and measuring responses at second-level resolution.
+
+**Positioning this work.** Most prior work on liquidity-price relationships examines their correlation or uses theoretical models to derive predictions. Our contribution is empirical and focused on temporal ordering: we ask which signal changes first, rather than whether they move together. This approach provides a different perspective on the liquidity-price relationship—one that may be relevant for understanding the origins of price shocks.
 
 ---
 

@@ -157,7 +157,7 @@
             "id": "MF-V3-009",
             "title": "Write Related Work section",
             "priority": 9,
-            "passes": false,
+            "passes": true,
             "description": "Survey relevant literature and position this work.",
             "acceptanceCriteria": [
                 "~300-400 words",
