@@ -1,3 +1,11 @@
+## Writing Patterns
+- Always cite exact statistics from `outputs/v2_stats.json`
+- Use "we" throughout (first person plural, avoid singular)
+- All figures referenced by number and label
+- Hedged language for any interpretive claims ("suggests", "consistent with", "may indicate")
+- NEVER claim causality - only correlation
+- State limitations directly and honestly
+
 ## Codebase Patterns
 - Canonical data lives in `data/binance/futures_um/{SYMBOL}/canonical/{YYYY-MM-DD}/` with `trades.csv` and `tob.csv`
 - Raw Binance data downloaded from https://data.binance.vision/data/futures/um/daily/
@@ -112,4 +120,15 @@
   - Reports should always derive numbers from generated data files
   - Include caveats about data limitations (days, symbol, exchange)
   - Structure: Executive Summary -> Data Tables -> Analysis -> Answer
+---
+
+## [2026-02-04 15:10] - MF-V3-002
+- Section written: Abstract
+- Word count: ~207 words
+- Key decisions made:
+  - Led with research question (understanding price shock genesis)
+  - Included all key statistics from v2_stats.json
+  - Used hedged language for interpretation ("consistent with", "correlation, not causation")
+  - Explicitly mentioned limitations in final paragraph
+- Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%
 ---

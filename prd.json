@@ -27,7 +27,7 @@
             "id": "MF-V3-001",
             "title": "Create paper skeleton with full section structure",
             "priority": 1,
-            "passes": false,
+            "passes": true,
             "description": "Set up the paper directory structure and create main.md with all sections, target word counts, and placeholder content.",
             "acceptanceCriteria": [
                 "Create paper/ directory",
@@ -42,7 +42,7 @@
             "id": "MF-V3-002",
             "title": "Write Abstract (200 words)",
             "priority": 2,
-            "passes": false,
+            "passes": true,
             "description": "Draft a compelling abstract that clearly states problem, method, result, and implication in Anthropic style.",
             "acceptanceCriteria": [
                 "Under 250 words",
