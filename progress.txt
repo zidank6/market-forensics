@@ -199,3 +199,16 @@
   - Did NOT claim causality or propose trading strategies
 - Statistics used: 14.60% volume-first rate (referenced in detection asymmetries discussion)
 ---
+
+## [2026-02-04 17:45] - MF-V3-008
+- Section written: Limitations
+- Word count: ~491 words
+- Key decisions made:
+  - Addressed all required limitations: single exchange, top-of-book only, arbitrary thresholds, date selection bias, timestamp precision, no causal identification
+  - Used bold headers for each limitation type for readability
+  - Written in first person ("We identify", "We do not know", "We are not sure")
+  - Directly honest style - explicitly states what we cannot claim
+  - Ended with concrete list of what would strengthen claims (5 items)
+  - Referenced sensitivity analysis results as partial mitigation for threshold concerns
+- Statistics used: 0.5% price change threshold, 2σ onset threshold (parameter references)
+---

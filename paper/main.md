@@ -280,9 +280,22 @@ However, consistency with theory does not establish that these mechanisms explai
 ## 7. Limitations
 
 <!-- Target: 400-500 words -->
-<!-- TODO: MF-V3-008 -->
 
-[Limitations section placeholder - to be written]
+We identify several limitations that constrain the conclusions we can draw from this analysis. We state these directly, as understanding what we cannot claim is as important as understanding what we find.
+
+**Single exchange.** Our data comes exclusively from Binance. We do not know whether the liquidity-first pattern holds on other cryptocurrency exchanges (Coinbase, Kraken, OKX) or in traditional financial markets. Binance has specific characteristics—fee structures, market maker programs, user demographics—that may influence the relationship between liquidity and price. Our findings may not generalize.
+
+**Top-of-book data only.** We analyze best bid and ask prices and quantities, but we do not observe the full order book depth. Meaningful liquidity changes—such as cancellation of large orders several ticks away from the best price—would be invisible in our data. Our "liquidity" measure (bid-ask spread) captures only one dimension of market liquidity. A study using full depth-of-book data might reach different conclusions.
+
+**Arbitrary thresholds.** Our event detection (0.5% price change) and onset detection (2σ threshold) parameters are chosen based on reasonable defaults, not optimized for any particular outcome. Different threshold choices would identify different events and potentially different ordering patterns. While our sensitivity analysis suggests robustness to threshold variation, we have not exhaustively explored the parameter space. We are not sure how sensitive our main finding is to these choices beyond the limited range we tested.
+
+**Date selection bias.** We intentionally selected volatile trading days to maximize event counts. This introduces bias: our sample over-represents periods of market stress and under-represents typical trading conditions. The liquidity-first pattern we observe may be specific to high-volatility environments. We cannot determine whether the same pattern holds during calm markets when price shocks are rare.
+
+**Timestamp precision.** Our data has millisecond-level timestamps, but we do not know the precise synchronization between the aggTrades and bookTicker feeds. If one feed is systematically delayed relative to the other, apparent temporal ordering in our analysis could reflect this delay rather than true event sequencing. Without access to Binance's internal infrastructure, we cannot rule out this possibility.
+
+**No causal identification.** Our analysis establishes correlation: liquidity changes and price shocks tend to co-occur, with liquidity changes more often appearing first. We cannot establish causation. Even if liquidity withdrawal truly precedes price shocks in time, this does not prove that liquidity withdrawal causes subsequent price movements. Both could be responses to a common upstream cause (such as large incoming order flow that we cannot observe).
+
+**What would strengthen our claims.** Several types of additional evidence would make our findings more convincing: (1) replication on other exchanges to test generalizability; (2) full order book data to capture deeper liquidity dynamics; (3) natural experiments or exogenous shocks that might support causal inference; (4) detailed analysis of the latency characteristics of Binance's data feeds; and (5) comparison between high-volatility and low-volatility periods. We do not have access to these data or methods in the current study.
 
 ---
 

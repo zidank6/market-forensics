@@ -138,7 +138,7 @@
             "id": "MF-V3-008",
             "title": "Write comprehensive Limitations section",
             "priority": 8,
-            "passes": false,
+            "passes": true,
             "description": "Write an honest, comprehensive limitations section matching Anthropic's intellectual honesty style.",
             "acceptanceCriteria": [
                 "~400-500 words",
