@@ -132,3 +132,15 @@
   - Explicitly mentioned limitations in final paragraph
 - Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%
 ---
+
+## [2026-02-04 15:30] - MF-V3-003
+- Section written: Introduction
+- Word count: ~480 words
+- Key decisions made:
+  - Led with motivation (why price shocks matter) in accessible language without jargon
+  - Stated research question in bold for emphasis
+  - Listed three contributions: empirical finding, methodology, dataset
+  - Emphasized correlation-not-causation limitation early
+  - Ended with paper roadmap as required
+- Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%
+---

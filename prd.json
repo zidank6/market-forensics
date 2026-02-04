@@ -57,7 +57,7 @@
             "id": "MF-V3-003",
             "title": "Write Introduction section",
             "priority": 3,
-            "passes": false,
+            "passes": true,
             "description": "Write the introduction motivating the problem, stating the research question, and listing contributions.",
             "acceptanceCriteria": [
                 "~400-500 words",

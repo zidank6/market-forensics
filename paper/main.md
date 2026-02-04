@@ -23,9 +23,28 @@ This finding is consistent with theories of informed trading where market makers
 ## 1. Introduction
 
 <!-- Target: 400-500 words -->
-<!-- TODO: MF-V3-003 -->
 
-[Introduction placeholder - to be written]
+Rapid price movements in financial markets can have significant consequences. Flash crashes erode market confidence, trigger margin calls, and cause substantial losses for participants caught on the wrong side. Understanding how these events begin—whether they are preceded by detectable warning signals—matters for market design, risk management, and our understanding of price formation.
+
+A central question in market microstructure is whether liquidity conditions change before prices move, or whether price changes drive liquidity responses. If informed traders or market makers systematically withdraw liquidity before price shocks, this signal could in principle be observed and acted upon. Conversely, if prices simply gap without warning and liquidity follows, early detection becomes more difficult.
+
+In this paper, we study the temporal ordering of liquidity, price, and volume changes around price shock events in cryptocurrency futures markets. We ask a specific empirical question: **When a large price movement occurs, does liquidity (measured by bid-ask spread) typically change first, or does price move first?**
+
+We analyze 452 price shock events across BTCUSDT and ETHUSDT perpetual futures on Binance, covering 17 trading days selected for their volatility. For each event, we detect when liquidity, price, and volume first deviate significantly from their baseline behavior using a standardized threshold approach. We then classify each event by which signal changed first.
+
+Our main finding is that liquidity withdrawal precedes price shocks at a rate significantly above what we would expect by chance. Of the 452 events we analyze, 200 (44.25%) show liquidity changing first, compared to 186 (41.15%) price-first and 66 (14.60%) volume-first events. A binomial test against a null hypothesis of 33.3% (uniform across three categories) yields p = 2 × 10⁻⁶, and the bootstrap 95% confidence interval [39.6%, 48.7%] excludes the null proportion.
+
+This paper makes three contributions:
+
+1. **An empirical finding.** We document that liquidity withdrawal precedes price shocks at statistically significant rates in cryptocurrency perpetual futures. This pattern is consistent across both assets in our sample and robust to threshold sensitivity analysis.
+
+2. **A methodology for temporal ordering analysis.** We develop a simple, reproducible approach for detecting signal onset times and classifying events by ordering. The method is transparent and can be applied to other markets and asset classes.
+
+3. **A curated dataset.** We construct a dataset of labeled price shock events with precise onset timestamps, enabling future research on event dynamics.
+
+We emphasize that our analysis establishes correlation, not causation. The observed ordering could reflect threshold artifacts, latency differences, or other confounds. We discuss these limitations in detail and suggest what additional evidence would strengthen or weaken our interpretation.
+
+The remainder of this paper is organized as follows. Section 2 reviews related work. Section 3 describes our data. Section 4 details our methodology. Section 5 presents results. Section 6 discusses interpretation and alternative explanations. Section 7 addresses limitations. Section 8 concludes.
 
 ---
 
