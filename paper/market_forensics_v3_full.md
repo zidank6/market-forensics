@@ -1,6 +1,6 @@
 # Liquidity Withdrawal Precedes Price Shocks: Evidence from Cryptocurrency Futures
 
-**Authors:** [Author names to be added]
+**Authors:** Zidan Kazi
 
 **Date:** February 2026
 
