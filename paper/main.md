@@ -1,6 +1,6 @@
 # Liquidity Withdrawal Precedes Price Shocks: Evidence from Cryptocurrency Futures
 
-**Authors:** [Author names to be added]
+**Authors:** Zidan Kazi
 
 **Date:** February 2026
 
@@ -13,7 +13,7 @@ Understanding how price shocks originate in financial markets has implications f
 
 We analyze 452 price shock events across BTCUSDT and ETHUSDT perpetual futures on Binance over 17 trading days. For each event, we detect when liquidity (bid-ask spread), price, and volume first deviate from baseline behavior, then classify events by which signal changed first.
 
-We find that liquidity withdrawal precedes price shocks at a rate significantly above chance. Of 452 events, 200 (44.25%) show liquidity changes first, compared to 186 (41.15%) price-first and 66 (14.60%) volume-first events. A binomial test against a uniform null hypothesis of 33.3% yields p = 2 × 10⁻⁶, and a bootstrap 95% confidence interval of [39.6%, 48.7%] excludes the null proportion.
+We find that liquidity withdrawal precedes price shocks at a rate significantly above chance. Of 452 events, 200 (44.25%) show liquidity changes first, compared to 186 (41.15%) price-first and 66 (14.60%) volume-first events. A binomial test against a uniform null hypothesis of 33.3% yields $p = 2 \times 10^{-6}$, and a bootstrap 95% confidence interval of [39.6%, 48.7%] excludes the null proportion.
 
 This finding is consistent with theories of informed trading where market makers or informed participants withdraw liquidity before price-moving events. However, we emphasize that our analysis establishes correlation, not causation. The observed ordering may reflect detection artifacts, latency differences between data feeds, or threshold sensitivities. We discuss these limitations and suggest directions for more robust causal identification.
 
@@ -30,7 +30,7 @@ In this paper, we study the temporal ordering of liquidity, price, and volume ch
 
 We analyze 452 price shock events across BTCUSDT and ETHUSDT perpetual futures on Binance, covering 17 trading days selected for their volatility. For each event, we detect when liquidity, price, and volume first deviate significantly from their baseline behavior using a standardized threshold approach. We then classify each event by which signal changed first.
 
-Our main finding is that liquidity withdrawal precedes price shocks at a rate significantly above what we would expect by chance. Of the 452 events we analyze, 200 (44.25%) show liquidity changing first, compared to 186 (41.15%) price-first and 66 (14.60%) volume-first events. A binomial test against a null hypothesis of 33.3% (uniform across three categories) yields p = 2 × 10⁻⁶, and the bootstrap 95% confidence interval [39.6%, 48.7%] excludes the null proportion.
+Our main finding is that liquidity withdrawal precedes price shocks at a rate significantly above what we would expect by chance. Of the 452 events we analyze, 200 (44.25%) show liquidity changing first, compared to 186 (41.15%) price-first and 66 (14.60%) volume-first events. A binomial test against a null hypothesis of 33.3% (uniform across three categories) yields $p = 2 \times 10^{-6}$, and the bootstrap 95% confidence interval [39.6%, 48.7%] excludes the null proportion.
 
 This paper makes three contributions:
 
@@ -114,7 +114,7 @@ We define a **price shock** as a price movement exceeding a threshold percentage
 
 $$\left| \frac{p(t) - p(t - \Delta)}{p(t - \Delta)} \right| \geq \theta$$
 
-where Δ is the rolling window duration (60 seconds) and θ is the threshold (0.5% in our primary analysis). We detect events using mid-prices computed from top-of-book data as *(bid + ask) / 2*.
+where $\Delta$ is the rolling window duration (60 seconds) and $\theta$ is the threshold (0.5% in our primary analysis). We detect events using mid-prices computed from top-of-book data as *(bid + ask) / 2*.
 
 To avoid counting the same market move multiple times, we apply a de-duplication rule: if multiple threshold crossings occur within the same rolling window, we keep only the event with the largest magnitude. This ensures that a single large price move generates exactly one event, regardless of how many intermediate threshold crossings occur.
 
@@ -132,13 +132,13 @@ For each window, we extract:
 
 For each signal (liquidity, price, volume), we detect the **onset time**—the first moment in the post-event window when that signal deviates significantly from its pre-event baseline. We use a threshold-based approach calibrated to each signal's variance.
 
-**Baseline computation.** For each signal, we compute the mean (μ) and standard deviation (σ) from the pre-event window. For liquidity, we use bid-ask spread values. For price, we use mid-prices. For volume, we aggregate trade sizes into 5-second buckets and compute statistics over bucket volumes.
+**Baseline computation.** For each signal, we compute the mean ($\mu$) and standard deviation ($\sigma$) from the pre-event window. For liquidity, we use bid-ask spread values. For price, we use mid-prices. For volume, we aggregate trade sizes into 5-second buckets and compute statistics over bucket volumes.
 
-**Threshold crossing.** We flag an onset when the signal first exceeds μ + *k*σ in the post-event window, where *k* = 2.0 (configurable). The specific conditions are:
+**Threshold crossing.** We flag an onset when the signal first exceeds $\mu + k\sigma$ in the post-event window, where $k = 2.0$ (configurable). The specific conditions are:
 
-- **Liquidity onset**: Spread exceeds baseline + 2σ (spread widening indicates liquidity withdrawal)
-- **Price onset**: Mid-price moves beyond baseline ± 2σ (direction depends on whether the event was an up or down shock)
-- **Volume onset**: 5-second bucket volume exceeds baseline + 2σ
+- **Liquidity onset**: Spread exceeds baseline + $2\sigma$ (spread widening indicates liquidity withdrawal)
+- **Price onset**: Mid-price moves beyond baseline $\pm 2\sigma$ (direction depends on whether the event was an up or down shock)
+- **Volume onset**: 5-second bucket volume exceeds baseline + $2\sigma$
 
 If a signal never crosses its threshold in the post-window, we record no onset for that signal. If the baseline standard deviation is near zero (insufficient variation), we use a small fraction of the baseline value as a minimum threshold to avoid degeneracy.
 
@@ -157,7 +157,7 @@ Events classified as "undetermined" are excluded from statistical analysis, as t
 
 We test whether the observed proportion of liquidity-first events differs from chance. Under a null hypothesis of no systematic ordering, we expect each of the three categories to occur with equal probability (33.3%).
 
-**Binomial test.** We treat the liquidity-first count as a binomial random variable with *n* = 452 trials and null success probability *p*₀ = 1/3. We compute the two-sided p-value for the observed proportion (44.25%).
+**Binomial test.** We treat the liquidity-first count as a binomial random variable with *n* = 452 trials and null success probability $p_0 = 1/3$. We compute the two-sided p-value for the observed proportion (44.25%).
 
 **Bootstrap confidence interval.** We construct a 95% confidence interval for the true liquidity-first proportion using the percentile bootstrap method with 1,000 resamples and a fixed random seed for reproducibility. If this interval excludes the null proportion (33.3%), we consider the result robust.
 
@@ -184,7 +184,7 @@ Under a null hypothesis of no systematic ordering, we would expect each category
 
 We apply two statistical tests to assess whether the observed liquidity-first proportion differs meaningfully from chance.
 
-**Binomial test.** Treating the 200 liquidity-first events as successes in 452 Bernoulli trials with null probability p₀ = 1/3, we compute a two-sided p-value of 2 × 10⁻⁶. This result is significant at both α = 0.05 and α = 0.01.
+**Binomial test.** Treating the 200 liquidity-first events as successes in 452 Bernoulli trials with null probability $p_0 = 1/3$, we compute a two-sided p-value $p = 2 \times 10^{-6}$. This result is significant at both $\alpha = 0.05$ and $\alpha = 0.01$.
 
 **Bootstrap confidence interval.** Using the percentile bootstrap method with 1,000 resamples, we construct a 95% confidence interval for the true liquidity-first proportion: [39.6%, 48.7%]. This interval excludes the null hypothesis proportion of 33.3%, providing additional evidence that the observed pattern is unlikely to arise from chance.
 
@@ -265,7 +265,7 @@ Several alternative explanations could generate the observed pattern without req
 
 **Latency differences.** Our data combines two feeds: bookTicker (order book updates) and aggTrades (executed trades). If these feeds have different latencies, apparent temporal ordering could reflect delivery delays rather than true event sequencing. We do not know the precise latency characteristics of Binance's data feeds.
 
-**Threshold artifacts.** Our onset detection uses a fixed multiplier (2σ) for all signals. If spread variance is inherently lower than price variance, spread changes might cross their threshold more easily, biasing classification toward liquidity-first.
+**Threshold artifacts.** Our onset detection uses a fixed multiplier ($2\sigma$) for all signals. If spread variance is inherently lower than price variance, spread changes might cross their threshold more easily, biasing classification toward liquidity-first.
 
 **Mechanical spread widening.** When order book depth thins on one side—perhaps due to the same aggressive orders that will cause the price shock—spreads mechanically widen even without any intentional liquidity withdrawal. The spread change and price change would then be effects of the same cause (order flow imbalance), not a causal sequence.
 
@@ -288,7 +288,7 @@ We identify several limitations that constrain the conclusions we can draw from 
 
 **Top-of-book data only.** We analyze best bid and ask prices and quantities, but we do not observe the full order book depth. Meaningful liquidity changes—such as cancellation of large orders several ticks away from the best price—would be invisible in our data. Our "liquidity" measure (bid-ask spread) captures only one dimension of market liquidity. A study using full depth-of-book data might reach different conclusions.
 
-**Arbitrary thresholds.** Our event detection (0.5% price change) and onset detection (2σ threshold) parameters are chosen based on reasonable defaults, not optimized for any particular outcome. Different threshold choices would identify different events and potentially different ordering patterns. While our sensitivity analysis suggests robustness to threshold variation, we have not exhaustively explored the parameter space. We are not sure how sensitive our main finding is to these choices beyond the limited range we tested.
+**Arbitrary thresholds.** Our event detection (0.5% price change) and onset detection ($2\sigma$ threshold) parameters are chosen based on reasonable defaults, not optimized for any particular outcome. Different threshold choices would identify different events and potentially different ordering patterns. While our sensitivity analysis suggests robustness to threshold variation, we have not exhaustively explored the parameter space. We are not sure how sensitive our main finding is to these choices beyond the limited range we tested.
 
 **Date selection bias.** We intentionally selected volatile trading days to maximize event counts. This introduces bias: our sample over-represents periods of market stress and under-represents typical trading conditions. The liquidity-first pattern we observe may be specific to high-volatility environments. We cannot determine whether the same pattern holds during calm markets when price shocks are rare.
 
@@ -303,7 +303,7 @@ We identify several limitations that constrain the conclusions we can draw from 
 ## 8. Conclusion
 
 
-We have analyzed 452 price shock events in BTCUSDT and ETHUSDT perpetual futures on Binance and found that liquidity withdrawal precedes price shocks at a rate significantly above chance. Of all events, 44.25% show liquidity changes first, compared to the 33.3% we would expect under uniform distribution (p = 2 × 10⁻⁶). This pattern holds across both assets and is robust to threshold sensitivity analysis.
+We have analyzed 452 price shock events in BTCUSDT and ETHUSDT perpetual futures on Binance and found that liquidity withdrawal precedes price shocks at a rate significantly above chance. Of all events, 44.25% show liquidity changes first, compared to the 33.3% we would expect under uniform distribution ($p = 2 \times 10^{-6}$). This pattern holds across both assets and is robust to threshold sensitivity analysis.
 
 This work contributes an empirical finding—that liquidity and price changes around shocks exhibit systematic temporal ordering—along with a methodology for detecting and classifying these patterns. We emphasize that our evidence is correlational. We cannot determine whether liquidity withdrawal causes subsequent price movements, reflects anticipatory behavior by informed participants, or arises from measurement artifacts.
 

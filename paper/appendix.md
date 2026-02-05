@@ -41,7 +41,7 @@ The following parameters were used for event detection and classification:
 | Rolling window | 60 seconds | Window for computing price change |
 | Pre-event window | 300 seconds | Baseline computation window |
 | Post-event window | 300 seconds | Onset detection window |
-| Onset threshold multiplier | 2.0σ | Standard deviations above baseline |
+| Onset threshold multiplier | 2.0$\sigma$ | Standard deviations above baseline |
 | Volume bucket size | 5 seconds | Aggregation window for volume signal |
 | Bootstrap resamples | 1,000 | For confidence interval estimation |
 | Bootstrap seed | 42 | For reproducibility |
@@ -61,11 +61,11 @@ The following parameters were used for event detection and classification:
 
 **Binomial Test**
 
-- Null hypothesis: H₀: p = 1/3 (uniform distribution across three categories)
-- Alternative hypothesis: H₁: p ≠ 1/3
+- Null hypothesis: H$_0$: $p_0 = 1/3$ (uniform distribution across three categories)
+- Alternative hypothesis: H$_1$: $p \neq 1/3$
 - Test statistic: Observed proportion = 200/452 = 0.4425
-- p-value: 2 × 10⁻⁶ (two-sided)
-- Conclusion: Reject H₀ at α = 0.01
+- p-value: $2 \times 10^{-6}$ (two-sided)
+- Conclusion: Reject H$_0$ at $\alpha = 0.01$
 
 **Bootstrap Confidence Interval**
 
