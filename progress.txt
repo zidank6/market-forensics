@@ -1,5 +1,13 @@
 # Market Forensics v2 Progress
 
+## Writing Patterns
+- Always cite exact statistics from `outputs/v2_stats.json`
+- Use "we" throughout (first person plural, avoid singular)
+- All figures referenced by number and label
+- Hedged language for any interpretive claims ("suggests", "consistent with", "may indicate")
+- NEVER claim causality - only correlation
+- State limitations directly and honestly
+
 ## Codebase Patterns
 - Canonical data lives at: `data/binance/futures_um/{ASSET}/canonical/{DATE}/` with `trades.csv` and `tob.csv`
 - V2 outputs go to `outputs/v2/{asset}/{date}/` (organized by asset then date)
@@ -133,4 +141,155 @@ Validate liquidity-first hypothesis with 50-100 events across 2 assets.
   - Structure as a template that gets populated after running scripts
   - Reference output files inline rather than hardcoding values
   - Include complete execution guide for reproducibility
+---
+
+## [2026-02-04 15:10] - MF-V3-002
+- Section written: Abstract
+- Word count: ~207 words
+- Key decisions made:
+  - Led with research question (understanding price shock genesis)
+  - Included all key statistics from v2_stats.json
+  - Used hedged language for interpretation ("consistent with", "correlation, not causation")
+  - Explicitly mentioned limitations in final paragraph
+- Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%
+---
+
+## [2026-02-04 15:30] - MF-V3-003
+- Section written: Introduction
+- Word count: ~480 words
+- Key decisions made:
+  - Led with motivation (why price shocks matter) in accessible language without jargon
+  - Stated research question in bold for emphasis
+  - Listed three contributions: empirical finding, methodology, dataset
+  - Emphasized correlation-not-causation limitation early
+  - Ended with paper roadmap as required
+- Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%
+---
+
+## [2026-02-04 16:00] - MF-V3-004
+- Section written: Data
+- Word count: ~370 words
+- Key decisions made:
+  - Structured into three subsections: Data Source, Date Selection, Summary Statistics
+  - Explicitly mentioned data.binance.vision as source
+  - Documented both raw feeds (aggTrades, bookTicker) and canonical format (trades.csv, tob.csv)
+  - Acknowledged intentional bias toward volatile dates and referenced Limitations section
+  - Added per-asset event counts (BTCUSDT: 239, ETHUSDT: 213)
+  - Noted event range across dates (1-83 events per day)
+- Statistics used: 452 events, 17 trading days, BTCUSDT (239 events), ETHUSDT (213 events), date range Jan 3 – Mar 29 2024
+---
+
+## [2026-02-04 16:30] - MF-V3-005
+- Section written: Methods
+- Word count: ~731 words
+- Key decisions made:
+  - Structured into five subsections matching implementation: Event Detection, Window Extraction, Onset Detection, Classification Scheme, Statistical Tests
+  - Included formal equation for price shock detection
+  - Documented all parameter values from config: 0.5% threshold, 60s rolling window, 300s pre/post windows, k=2.0 std multiplier
+  - Explained de-duplication rule for overlapping events
+  - Referenced Figure 3 for methodology illustration
+  - Used precise terminology: "onset time", "baseline", "threshold crossing"
+- Statistics used: 452 events (n in binomial test), 44.25% observed proportion, 33.3% null proportion, 1000 bootstrap resamples
+---
+
+## [2026-02-04 17:00] - MF-V3-006
+- Section written: Results
+- Word count: ~832 words
+- Key decisions made:
+  - Structured into five subsections: Main Finding, Statistical Significance, Asset Comparison, Threshold Sensitivity, Onset Time Differences
+  - Led with main finding as required by style guide (results-first framing)
+  - Included all figures (1, 2, 3) with descriptive captions
+  - Added Table 2 for per-asset breakdown (BTCUSDT vs ETHUSDT)
+  - Added Table 3 for sensitivity analysis results (0.4%, 0.5%, 0.6% thresholds)
+  - Used hedged language throughout ("suggests", "hesitate to draw strong conclusions")
+  - Explicitly noted that statistical significance doesn't imply causation
+  - Acknowledged limitations of single-day sensitivity analysis
+- Statistics used: 452 events, 200 (44.25%) liquidity-first, 186 (41.15%) price-first, 66 (14.60%) volume-first, p = 2×10⁻⁶, 95% CI [39.6%, 48.7%], null = 33.3%, BTCUSDT: 239 events (110 liq, 94 price, 35 vol), ETHUSDT: 213 events (90 liq, 92 price, 31 vol)
+---
+
+## [2026-02-04 17:30] - MF-V3-007
+- Section written: Discussion
+- Word count: ~511 words
+- Key decisions made:
+  - Structured into three subsections: Interpretation, Alternative Explanations, Connection to Theory
+  - Proposed two mechanisms for liquidity-first pattern: market maker anticipation and informed trader order cancellation
+  - Addressed four alternative explanations: latency differences, threshold artifacts, mechanical spread widening, detection asymmetries
+  - Referenced Kyle (1985) and Glosten-Milgrom (1985) for theoretical grounding
+  - Emphasized correlation-not-causation throughout
+  - Used hedged language ("may indicate", "could arise", "consistent with")
+  - Did NOT claim causality or propose trading strategies
+- Statistics used: 14.60% volume-first rate (referenced in detection asymmetries discussion)
+---
+
+## [2026-02-04 17:45] - MF-V3-008
+- Section written: Limitations
+- Word count: ~491 words
+- Key decisions made:
+  - Addressed all required limitations: single exchange, top-of-book only, arbitrary thresholds, date selection bias, timestamp precision, no causal identification
+  - Used bold headers for each limitation type for readability
+  - Written in first person ("We identify", "We do not know", "We are not sure")
+  - Directly honest style - explicitly states what we cannot claim
+  - Ended with concrete list of what would strengthen claims (5 items)
+  - Referenced sensitivity analysis results as partial mitigation for threshold concerns
+- Statistics used: 0.5% price change threshold, 2σ onset threshold (parameter references)
+---
+
+## [2026-02-04 18:00] - MF-V3-009
+- Section written: Related Work
+- Word count: ~365 words
+- Key decisions made:
+  - Organized into five themes: fundamentals (Kyle, Glosten-Milgrom), liquidity-volatility, crypto microstructure, event study methodology, positioning
+  - Referenced Kyle (1985) and Glosten-Milgrom (1985) as theoretical foundations
+  - Connected to flight-to-quality literature for liquidity-volatility relationship
+  - Noted crypto markets research as growing area with 24/7 trading, no circuit breakers
+  - Explicitly positioned this work as empirical, focused on temporal ordering
+  - Used hedged language ("consistent with", "may be relevant")
+- Statistics used: None (literature review section)
+---
+
+## [2026-02-04 18:15] - MF-V3-010
+- Section written: Conclusion
+- Word count: ~214 words
+- Key decisions made:
+  - Restated core finding with exact statistics (44.25% vs 33.3%, p = 2×10⁻⁶)
+  - Emphasized both contributions: empirical finding and methodology
+  - Listed three future work directions: other exchanges, full depth-of-book, latency analysis
+  - Ended with measured closing thought about structure being worth investigating
+  - Did NOT introduce new material
+  - Used hedged language for interpretations
+- Statistics used: 452 events, 44.25% liquidity-first, 33.3% null, p = 2×10⁻⁶
+---
+
+## [2026-02-04 18:30] - MF-V3-011
+- Section written: Publication-quality figures
+- Files created:
+  - `scripts/generate_paper_figures.py` - Figure generation script
+  - `paper/figures/fig1_ordering_proportions.png` - Bar chart (73KB, 300 DPI)
+  - `paper/figures/fig2_onset_deltas.png` - Histogram (81KB, 300 DPI)
+  - `paper/figures/fig3_example_event.png` - 3-panel event window (420KB, 300 DPI)
+- Key decisions made:
+  - Used consistent color scheme: blue (liquidity), magenta (price), orange (volume)
+  - Added null hypothesis reference line (33.3%) to Figure 1
+  - Figure 2 shows onset deltas filtered to ±10 seconds for readability
+  - Figure 3 uses synthetic data to illustrate typical liquidity-first event pattern
+  - All figures have proper axis labels, legends, and 300 DPI resolution
+  - Removed top/right spines for cleaner look (Anthropic style)
+- Statistics used: 200/186/66 counts, 44.2%/41.1%/14.6% proportions, 33.3% null
+---
+
+## [2026-02-04 18:45] - MF-V3-012
+- Section written: Final editing and consistency pass
+- Files modified:
+  - `paper/main.md` - Removed all target word count comments
+  - `paper/references.md` - Updated with complete references (11 papers)
+  - `paper/appendix.md` - Created with date list, parameter config, detailed results
+- Key decisions made:
+  - Verified all statistics match v2_stats.json (452 events, 44.25%, p=2×10⁻⁶, etc.)
+  - Confirmed figure references are correct (Figures 1, 2, 3)
+  - Section ordering: Abstract → Intro → Related Work → Data → Methods → Results → Discussion → Limitations → Conclusion
+  - No placeholder text remains (except author names, which should be added by authors)
+  - Added references for: Kyle (1985), Glosten-Milgrom (1985), Amihud (2002), Brunnermeier-Pedersen (2009), Makarov-Schoar (2020), etc.
+  - Appendix includes: complete date list (17 dates), parameter table, per-asset breakdown, statistical test details
+- Final word count: ~4,205 words
+- Statistics verified: All key numbers consistent throughout paper
 ---

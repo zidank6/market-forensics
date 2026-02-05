@@ -1,124 +1,170 @@
-# Ralph Agent Instructions (market-forensics / Python)
+# Ralph Agent Instructions (market-forensics / Research Paper)
 
-You are an autonomous coding agent working on the `market-forensics` repository.
+You are an autonomous writing agent working on the `market-forensics` repository.
 
 ## Project Context (Read First)
 
-market-forensics is a research/forensics pipeline for crypto market microstructure stress events.
+market-forensics is a research pipeline that has produced empirical findings about liquidity-price ordering in crypto markets.
 
-Primary goal:
-- Reconstruct short event windows around sudden moves and determine the sequence of changes:
-  liquidity (spread / top-of-book), trading behavior (trades/volume), and price (mid/last).
+**v2 Analysis Results (USE THESE EXACT NUMBERS):**
+- Total events: 452
+- Liquidity-first: 200 (44.25%)
+- Price-first: 186 (41.15%)
+- Volume-first: 66 (14.60%)
+- Binomial p-value: 2×10⁻⁶
+- 95% Bootstrap CI: [39.6%, 48.7%]
+- Null hypothesis: 33.3% (3-class uniform)
 
-Non-goals (do NOT implement):
-- No trading strategies, alpha signals, or predictions
-- No real-time streaming in v1
-- No dashboards or UI in v1
-- No simulations / synthetic market data generation
-- No news/sentiment ingestion in v1
-
-Guiding principle:
-- Prefer boring-but-real over clever-but-fragile. Fail loudly on bad inputs.
+**Core finding:** Liquidity withdrawal precedes price shocks at a rate significantly above chance.
 
 ## Your Task
 
-1. Read the PRD task list at `./prd.json` (repo root)
-2. Read the progress log at `./progress.txt` (repo root). Check `## Codebase Patterns` first if present.
+1. Read the PRD task list at `prd.json` (repo root)
+2. Read the progress log at `progress.txt` (repo root). Check `## Writing Patterns` first if present.
 3. Check you're on the correct branch from PRD `branchName`. If not, check it out or create from `main`.
 4. Pick the **highest priority** user story where `passes: false`
-5. Implement that single user story (and only that story)
-6. Run the required quality checks (see below)
-7. If you discover reusable patterns/gotchas, update:
-   - `## Codebase Patterns` at the TOP of `progress.txt` (consolidated, reusable only)
-   - and/or nearby `CLAUDE.md` files if there is genuinely reusable module-specific guidance
-8. If checks pass, commit ALL changes with message: `feat: [Story ID] - [Story Title]`
+5. Write that single section (and only that section)
+6. Run quality checks (see below)
+7. If you discover reusable patterns, update:
+   - `## Writing Patterns` at the TOP of `progress.txt`
+8. Commit ALL changes with message: `docs: [Story ID] - [Story Title]`
 9. Update `prd.json` to set `passes: true` for the completed story
 10. Append a progress entry to `progress.txt`
 
-Work on ONE story per iteration. Keep changes minimal and focused.
+Work on ONE story per iteration. Keep changes focused.
 
-## Repo Conventions
+## Writing Style Guide (CRITICAL)
 
-- Python-only v1. Keep it simple, reproducible, and config-driven.
-- Prefer small modules with clear names:
-  - `src/market_forensics/data/`
-  - `src/market_forensics/events/`
-  - `src/market_forensics/windows/`
-  - `src/market_forensics/metrics/`
-  - `src/market_forensics/plots/`
-- Deterministic outputs:
-  - Same input + same config must produce the same files in `outputs/`.
-- Config-driven:
-  - thresholds/window sizes live in a config file (JSON/YAML), not hard-coded.
-- Fail loudly:
-  - validate inputs; raise exceptions with clear error messages.
-- Avoid “research theater”:
-  - no big theory claims in code/docs; focus on measurable definitions.
+Match **Anthropic technical report** style:
+
+### 1. Clarity Over Cleverness
+- Simple sentence structure
+- Define terms before using them
+- Avoid unnecessary jargon
+- One idea per sentence in complex sections
+
+### 2. Intellectual Honesty
+- State what you don't know
+- Quantify uncertainty explicitly
+- Use hedged language: "suggests", "consistent with", "may indicate"
+- NEVER claim causality (we only have correlation)
+
+### 3. Direct Language
+- "We find X" not "X was found"
+- "This suggests Y" not "It might be possible that Y"
+- "We don't know Z" not "Further research is needed to determine Z"
+
+### 4. Results-First Framing
+- Lead with findings
+- Explain methodology second
+- Discuss implications third
+
+### 5. Honest Limitations
+- Each limitation stated directly
+- What would strengthen the claim
+- "We are not sure about X because Y"
+
+## Repo Resources
+
+Reference these files when writing:
+
+- **Statistics:** `outputs/v2_stats.json`
+- **Event data:** `outputs/v2_summary.csv`
+- **Figures:** `outputs/figures/`
+- **Methods:** `src/market_forensics/` (for implementation details)
+- **Config:** `config/default.json` (for parameter values)
+- **Date list:** `config/dates.json`
 
 ## Quality Checks (Required)
 
-Run these before committing (must pass):
+Run these before committing:
 
-1) Python syntax / import sanity:
+1) Markdown syntax check:
 ```bash
-python -m compileall .
+# Check for unclosed code blocks, broken links
+cat paper/main.md | head -100
 ```
 
-2) If pytest exists (only run if `pytest` is installed and tests directory exists):
+2) Statistics verification:
 ```bash
-python -m pytest -q
+# Verify numbers match v2_stats.json
+cat outputs/v2_stats.json
 ```
 
-3) If ruff exists (only run if configured):
+3) Word count check (approximate):
 ```bash
-ruff check .
+wc -w paper/main.md
 ```
 
-If any of these tools are not installed/configured yet, do NOT add heavy setup unless the current story requires it.
-However, **the compileall check is mandatory**.
+## Paper Directory Structure
+
+```
+paper/
+├── main.md           # Full paper
+├── figures/          # Publication-quality figures
+│   ├── fig1_ordering_proportions.png
+│   ├── fig2_onset_deltas.png
+│   └── fig3_example_event.png
+├── references.md     # Bibliography
+└── appendix.md       # Supplementary material
+```
 
 ## Progress Report Format
 
-APPEND to `progress.txt` (never replace, always append):
+APPEND to `progress.txt`:
 
 ```text
 ## [YYYY-MM-DD HH:MM] - [Story ID]
-- What was implemented
-- Files changed
-- **Learnings for future iterations:**
-  - Patterns discovered (general + reusable)
-  - Gotchas encountered (general + reusable)
-  - Useful context (where things live, how to run)
+- Section written: [section name]
+- Word count: [approximate]
+- Key decisions made:
+  - [decision 1]
+  - [decision 2]
+- Statistics used: [list exact numbers cited]
 ---
 ```
 
-## Consolidate Patterns
+## Writing Patterns (Add Discoveries Here)
 
-If you discover a **reusable pattern** that future iterations should know, add it to the
-`## Codebase Patterns` section at the TOP of `progress.txt` (create it if it doesn't exist).
+If you discover a **reusable writing pattern** that future iterations should know, add it to the
+`## Writing Patterns` section at the TOP of `progress.txt`.
 
 Example:
-
 ```text
-## Codebase Patterns
-- Keep pipeline outputs deterministic under outputs/
-- Config values must be in config/*.json (no hardcoded thresholds)
-- Data loaders validate required columns and fail loudly
+## Writing Patterns
+- Always cite exact statistics from v2_stats.json
+- Use "we" throughout (first person singular avoided)
+- All figures referenced by number and label
+- Hedged language for any interpretive claims
 ```
 
-Only add patterns that are general and reusable (not story-specific).
+## Key Statistics Reference (USE THESE)
 
-## Update CLAUDE.md Files
+Copy these exactly when writing sections:
 
-Before committing, check if any edited directories have learnings worth preserving in a nearby CLAUDE.md.
+```
+Total events analyzed: 452
+Liquidity-first: 200 events (44.25%)
+Price-first: 186 events (41.15%)
+Volume-first: 66 events (14.60%)
 
-Add only genuinely reusable knowledge:
-- conventions, gotchas, cross-file dependencies, testing approaches, env requirements
+Binomial test:
+  - Observed: 44.25%
+  - Null hypothesis: 33.3%
+  - p-value: 2 × 10⁻⁶
+  - Significant at α = 0.05: Yes
+  - Significant at α = 0.01: Yes
 
-Do NOT add:
-- story-specific implementation details
-- temporary debugging notes
-- things already captured in progress.txt
+Bootstrap 95% CI: [39.6%, 48.7%]
+  - n_resamples: 1000
+  - Interpretation: CI excludes null (33.3%)
+
+Data:
+  - Assets: BTCUSDT, ETHUSDT
+  - Days analyzed: 31 total
+  - Data source: Binance USD-M Futures (data.binance.vision)
+  - Data types: aggTrades, bookTicker
+```
 
 ## Stop Condition
 
