@@ -1,3 +1,5 @@
+# Market Forensics v2 Progress
+
 ## Writing Patterns
 - Always cite exact statistics from `outputs/v2_stats.json`
 - Use "we" throughout (first person plural, avoid singular)
@@ -7,119 +9,138 @@
 - State limitations directly and honestly
 
 ## Codebase Patterns
-- Canonical data lives in `data/binance/futures_um/{SYMBOL}/canonical/{YYYY-MM-DD}/` with `trades.csv` and `tob.csv`
-- Raw Binance data downloaded from https://data.binance.vision/data/futures/um/daily/
-- Config files in `config/` - replication dates documented in `config/replication_dates.json`
-- Use `python3` not `python` on macOS
-- Script arguments via argparse for reusability
+- Canonical data lives at: `data/binance/futures_um/{ASSET}/canonical/{DATE}/` with `trades.csv` and `tob.csv`
+- V2 outputs go to `outputs/v2/{asset}/{date}/` (organized by asset then date)
+- Use `python3` not `python` (system default on macOS)
+- Scripts should support `--dry-run` for user visibility before long runs
+- Use subprocess to call `market_forensics.run` module with PYTHONPATH set to src/
+
+## Branch: feat/market-forensics-v2
+
+## Goal
+Validate liquidity-first hypothesis with 50-100 events across 2 assets.
+
+## Constraints
+- Laptop storage: ~60GB canonical data
+- Ralph builds scripts, user runs analysis
 
 ---
 
-## [2026-02-02 19:15] - MF-010
-- What was implemented:
-  - Downloaded raw Binance data for 2024-03-29 and 2024-03-30
-  - Updated `scripts/canonicalize_binance_um_day.py` to accept --date and --symbol args
-  - Canonicalized both new dates (trades.csv + tob.csv)
-  - Created `config/replication_dates.json` manifest documenting all 3 available dates
-- Files changed:
-  - `scripts/canonicalize_binance_um_day.py` - added canonicalize_day() function with argparse CLI
-  - `config/replication_dates.json` - new file documenting dates
-  - `data/binance/futures_um/BTCUSDT/canonical/2024-03-29/` - new canonical data
-  - `data/binance/futures_um/BTCUSDT/canonical/2024-03-30/` - new canonical data
-- **Learnings for future iterations:**
-  - Raw Binance files use naming convention: `{SYMBOL}-{feed}-{date}.csv`
-  - Canonical files must have ISO timestamps for pipeline compatibility
-  - 2024-03-29 had lower volume than 2024-03-28 (78MB vs 105MB trades)
-  - 2024-03-30 was a weekend day with even lower volume (41MB trades)
+## Stories
+
+- [x] MF-V2-001: Select and document target dates for analysis
+- [x] MF-V2-002: Create multi-day multi-asset pipeline runner
+- [x] MF-V2-003: Aggregate results into unified summary table
+- [x] MF-V2-004: Implement statistical tests for liquidity-first proportion
+- [x] MF-V2-005: Generate key visualizations
+- [x] MF-V2-006: Run threshold sensitivity analysis
+- [x] MF-V2-007: Write v2 research findings document
+
 ---
 
-## [2026-02-02 19:20] - MF-011
-- What was implemented:
-  - Created `scripts/run_replication.py` wrapper script
-  - Script reads dates from `config/replication_dates.json` or accepts `--dates` CLI arg
-  - Runs `python -m market_forensics.run` for each date with PYTHONPATH set
-  - Outputs to `outputs/{date}/` to keep results separate
-  - No modifications to `src/market_forensics/`
-- Files changed:
-  - `scripts/run_replication.py` - new file
-- **Learnings for future iterations:**
-  - Pipeline invoked via subprocess with PYTHONPATH=src
-  - Config overrides via CLI args (--trades, --tob, --output)
-  - Wrapper scripts live in `scripts/`, keep `src/` untouched for analysis changes
+## Notes
+
+### 2024-02-03: Data Setup Complete
+- Downloaded and canonicalized 17 BTCUSDT dates and 14 ETHUSDT dates
+- Data source: Binance USD-M Futures (data.binance.vision)
+- Total canonical data: ~60GB
+- Manifest: config/dates.json
+- Key dates: Jan 10-11 (ETF), Mar 5,14 (ATH)
+
 ---
 
-## [2026-02-02 19:25] - MF-012
-- What was implemented:
-  - Ran pipeline on 3 distinct trading days: 2024-03-27, 2024-03-28, 2024-03-29
-  - Each date produced event_orderings.csv in outputs/{date}/metrics/
-  - Added 2024-03-27 (higher volatility) replacing 2024-03-30 (weekend, 0 events)
-  - Updated config/replication_dates.json with final date selection
-- Results:
-  - 2024-03-27: 17 events, 12 windows (6 liquidity-first, 4 price-first, 2 volume-first)
-  - 2024-03-28: 3 events, 2 windows (2 liquidity-first)
-  - 2024-03-29: 2 events, 1 window (1 liquidity-first)
-- Files changed:
-  - `config/replication_dates.json` - updated dates list
-  - `outputs/2024-03-27/`, `outputs/2024-03-28/`, `outputs/2024-03-29/` - pipeline outputs
+## [2026-02-03 17:00] - MF-V2-002
+- What was implemented
+  - Created `scripts/run_v2_analysis.py` - multi-day multi-asset pipeline runner
+  - Reads dates from `config/dates.json` manifest
+  - Runs pipeline for each (asset, date) pair with available data
+  - Outputs to `outputs/v2/{asset}/{date}/`
+  - Skips missing dates gracefully with warning
+  - Supports `--dry-run`, `--assets`, `--dates` filtering options
+- Files changed
+  - `scripts/run_v2_analysis.py` (new)
 - **Learnings for future iterations:**
-  - Weekend dates (Sat/Sun) have significantly lower volatility - fewer events
-  - 2024-03-27 had the most activity (likely due to macro BTC volatility that week)
-  - Ordering classifications vary: liquidity-first dominant but not universal
+  - Assets in dates.json are detected as uppercase keys with list values
+  - Reference `scripts/run_replication.py` for subprocess pattern
+  - Dry-run output: 31 (asset, date) pairs available (17 BTCUSDT + 14 ETHUSDT)
 ---
 
-## [2026-02-02 19:30] - MF-013
-- What was implemented:
-  - Created `scripts/aggregate_results.py`
-  - Reads event_orderings.csv from each date's output directory
-  - Produces `outputs/replication_summary.csv` with required columns
-  - Prints summary statistics to console
-- Files changed:
-  - `scripts/aggregate_results.py` - new file
-  - `outputs/replication_summary.csv` - generated output
+## [2026-02-03 17:15] - MF-V2-003
+- What was implemented
+  - Created `scripts/aggregate_v2_results.py` - aggregates v2 results into unified summary
+  - Reads `outputs/v2/{asset}/{date}/metrics/event_orderings.csv` files
+  - Produces `outputs/v2_summary.csv` with columns: date, asset, event_id, classification, onset_*_sec, onset_delta
+  - Computes onset_delta = onset_liquidity - onset_price (negative if liquidity leads)
+  - Reports total event count and classification breakdown
+- Files changed
+  - `scripts/aggregate_v2_results.py` (new)
 - **Learnings for future iterations:**
-  - Use `from __future__ import annotations` for Python 3.9 compatibility
-  - run_summary.json contains event counts; event_orderings.csv has per-window classifications
-  - Classification field uses "liquidity-first", "price-first", "volume-first" naming
+  - event_orderings.csv has columns: window_id, symbol, event_timestamp, *_onset_time, classification
+  - Onset times are ISO timestamps; compute seconds relative to event_timestamp
+  - Use `collections.Counter` for quick classification breakdown
 ---
 
-## [2026-02-02 19:35] - MF-014
-- What was implemented:
-  - Created `scripts/run_sensitivity.py`
-  - Varies price_shock_threshold_pct via temporary config files (0.4, 0.5, 0.6)
-  - Runs pipeline 3 times with each threshold
-  - Produces `outputs/sensitivity_summary.csv`
-- Results on 2024-03-27:
-  - threshold=0.4%: 23 events, 16 windows (8 liq, 7 price, 1 vol)
-  - threshold=0.5%: 17 events, 12 windows (6 liq, 4 price, 2 vol)
-  - threshold=0.6%: 11 events, 8 windows (4 liq, 2 price, 2 vol)
-- Files changed:
-  - `scripts/run_sensitivity.py` - new file
-  - `outputs/sensitivity_summary.csv` - generated output
-  - `outputs/sensitivity_0.4/`, `outputs/sensitivity_0.5/`, `outputs/sensitivity_0.6/` - pipeline outputs
+## [2026-02-03 17:25] - MF-V2-004
+- What was implemented
+  - Created `scripts/run_statistics.py` - statistical tests for liquidity-first proportion
+  - Binomial test: two-sided test vs 33% null (3-class uniform)
+  - Bootstrap 95% CI: percentile method with 1000 resamples
+  - Outputs to `outputs/v2_stats.json` with p-value, CI, counts
+  - Human-readable summary with interpretation to stdout
+  - Implements binomial PMF and bootstrap from scratch (no scipy dependency)
+- Files changed
+  - `scripts/run_statistics.py` (new)
 - **Learnings for future iterations:**
-  - Lower thresholds detect more events (more sensitive)
-  - Liquidity-first remains the plurality classification across all thresholds
-  - Use tempfile for config overrides to avoid modifying base config
+  - Use `math.lgamma` for log-binomial coefficient to avoid overflow
+  - Percentile bootstrap: sort proportions, pick indices at alpha/2 and 1-alpha/2
+  - Always set random seed for reproducibility (default: 42)
 ---
 
-## [2026-02-02 19:40] - MF-015
-- What was implemented:
-  - Created `scripts/generate_report.py`
-  - Reads replication_summary.csv and sensitivity_summary.csv
-  - Produces `outputs/replication_report.md` markdown report
-  - All numbers derived from CSVs (not hardcoded)
-  - Answers research question: "Is liquidity-first ordering consistent?"
-- Key findings in report:
-  - Liquidity-first: 60% of detected events across 3 days
-  - Pattern stable across threshold variations (0.4%-0.6%)
-  - Answer: "Yes, with qualifications"
-- Files changed:
-  - `scripts/generate_report.py` - new file
-  - `outputs/replication_report.md` - generated output
+## [2026-02-03 17:35] - MF-V2-005
+- What was implemented
+  - Created `scripts/generate_v2_figures.py` - generates key visualizations
+  - Plot 1: Bar chart of ordering proportions (liquidity-first vs others)
+  - Plot 2: Histogram of onset deltas (t_liquidity - t_price in seconds)
+  - Saves to `outputs/figures/` as PNG (with matplotlib) or TXT/CSV (fallback)
+  - Always outputs CSV for data portability
+  - Uses `matplotlib.use('Agg')` for non-interactive backend
+- Files changed
+  - `scripts/generate_v2_figures.py` (new)
 - **Learnings for future iterations:**
-  - Reports should always derive numbers from generated data files
-  - Include caveats about data limitations (days, symbol, exchange)
-  - Structure: Executive Summary -> Data Tables -> Analysis -> Answer
+  - Check MATPLOTLIB_AVAILABLE before importing
+  - Use Agg backend for headless PNG generation
+  - Always provide CSV fallback for portability
+---
+
+## [2026-02-03 17:45] - MF-V2-006
+- What was implemented
+  - Created `scripts/run_v2_sensitivity.py` - v2 threshold sensitivity analysis
+  - Tests thresholds: 0.3%, 0.4%, 0.5%, 0.6%, 0.7%
+  - Runs detection and ordering for each threshold across all v2 (asset, date) pairs
+  - Produces `outputs/sensitivity.csv` with columns: threshold, n_events, pct_liquidity_first
+  - Uses temp config overrides (not modifying default.json)
+  - Supports `--dry-run` to preview processing
+- Files changed
+  - `scripts/run_v2_sensitivity.py` (new)
+- **Learnings for future iterations:**
+  - Reuse `create_config_with_threshold` pattern from existing run_sensitivity.py
+  - Temp config files must be cleaned up in finally block
+  - Capture subprocess output to suppress noise during batch runs
+---
+
+## [2026-02-03 17:55] - MF-V2-007
+- What was implemented
+  - Created `report/v2_findings.md` - structured v2 research findings document
+  - Sections: Summary, Data, Methods, Results, Robustness, Limitations, Conclusion
+  - References outputs: v2_stats.json, outputs/figures/*, sensitivity.csv
+  - Provides guidance on interpreting statistical tests
+  - Includes full pipeline execution guide in Appendix
+- Files changed
+  - `report/v2_findings.md` (new)
+- **Learnings for future iterations:**
+  - Structure as a template that gets populated after running scripts
+  - Reference output files inline rather than hardcoding values
+  - Include complete execution guide for reproducibility
 ---
 
 ## [2026-02-04 15:10] - MF-V3-002

@@ -1,0 +1,115 @@
+## Codebase Patterns
+- Canonical data lives in `data/binance/futures_um/{SYMBOL}/canonical/{YYYY-MM-DD}/` with `trades.csv` and `tob.csv`
+- Raw Binance data downloaded from https://data.binance.vision/data/futures/um/daily/
+- Config files in `config/` - replication dates documented in `config/replication_dates.json`
+- Use `python3` not `python` on macOS
+- Script arguments via argparse for reusability
+
+---
+
+## [2026-02-02 19:15] - MF-010
+- What was implemented:
+  - Downloaded raw Binance data for 2024-03-29 and 2024-03-30
+  - Updated `scripts/canonicalize_binance_um_day.py` to accept --date and --symbol args
+  - Canonicalized both new dates (trades.csv + tob.csv)
+  - Created `config/replication_dates.json` manifest documenting all 3 available dates
+- Files changed:
+  - `scripts/canonicalize_binance_um_day.py` - added canonicalize_day() function with argparse CLI
+  - `config/replication_dates.json` - new file documenting dates
+  - `data/binance/futures_um/BTCUSDT/canonical/2024-03-29/` - new canonical data
+  - `data/binance/futures_um/BTCUSDT/canonical/2024-03-30/` - new canonical data
+- **Learnings for future iterations:**
+  - Raw Binance files use naming convention: `{SYMBOL}-{feed}-{date}.csv`
+  - Canonical files must have ISO timestamps for pipeline compatibility
+  - 2024-03-29 had lower volume than 2024-03-28 (78MB vs 105MB trades)
+  - 2024-03-30 was a weekend day with even lower volume (41MB trades)
+---
+
+## [2026-02-02 19:20] - MF-011
+- What was implemented:
+  - Created `scripts/run_replication.py` wrapper script
+  - Script reads dates from `config/replication_dates.json` or accepts `--dates` CLI arg
+  - Runs `python -m market_forensics.run` for each date with PYTHONPATH set
+  - Outputs to `outputs/{date}/` to keep results separate
+  - No modifications to `src/market_forensics/`
+- Files changed:
+  - `scripts/run_replication.py` - new file
+- **Learnings for future iterations:**
+  - Pipeline invoked via subprocess with PYTHONPATH=src
+  - Config overrides via CLI args (--trades, --tob, --output)
+  - Wrapper scripts live in `scripts/`, keep `src/` untouched for analysis changes
+---
+
+## [2026-02-02 19:25] - MF-012
+- What was implemented:
+  - Ran pipeline on 3 distinct trading days: 2024-03-27, 2024-03-28, 2024-03-29
+  - Each date produced event_orderings.csv in outputs/{date}/metrics/
+  - Added 2024-03-27 (higher volatility) replacing 2024-03-30 (weekend, 0 events)
+  - Updated config/replication_dates.json with final date selection
+- Results:
+  - 2024-03-27: 17 events, 12 windows (6 liquidity-first, 4 price-first, 2 volume-first)
+  - 2024-03-28: 3 events, 2 windows (2 liquidity-first)
+  - 2024-03-29: 2 events, 1 window (1 liquidity-first)
+- Files changed:
+  - `config/replication_dates.json` - updated dates list
+  - `outputs/2024-03-27/`, `outputs/2024-03-28/`, `outputs/2024-03-29/` - pipeline outputs
+- **Learnings for future iterations:**
+  - Weekend dates (Sat/Sun) have significantly lower volatility - fewer events
+  - 2024-03-27 had the most activity (likely due to macro BTC volatility that week)
+  - Ordering classifications vary: liquidity-first dominant but not universal
+---
+
+## [2026-02-02 19:30] - MF-013
+- What was implemented:
+  - Created `scripts/aggregate_results.py`
+  - Reads event_orderings.csv from each date's output directory
+  - Produces `outputs/replication_summary.csv` with required columns
+  - Prints summary statistics to console
+- Files changed:
+  - `scripts/aggregate_results.py` - new file
+  - `outputs/replication_summary.csv` - generated output
+- **Learnings for future iterations:**
+  - Use `from __future__ import annotations` for Python 3.9 compatibility
+  - run_summary.json contains event counts; event_orderings.csv has per-window classifications
+  - Classification field uses "liquidity-first", "price-first", "volume-first" naming
+---
+
+## [2026-02-02 19:35] - MF-014
+- What was implemented:
+  - Created `scripts/run_sensitivity.py`
+  - Varies price_shock_threshold_pct via temporary config files (0.4, 0.5, 0.6)
+  - Runs pipeline 3 times with each threshold
+  - Produces `outputs/sensitivity_summary.csv`
+- Results on 2024-03-27:
+  - threshold=0.4%: 23 events, 16 windows (8 liq, 7 price, 1 vol)
+  - threshold=0.5%: 17 events, 12 windows (6 liq, 4 price, 2 vol)
+  - threshold=0.6%: 11 events, 8 windows (4 liq, 2 price, 2 vol)
+- Files changed:
+  - `scripts/run_sensitivity.py` - new file
+  - `outputs/sensitivity_summary.csv` - generated output
+  - `outputs/sensitivity_0.4/`, `outputs/sensitivity_0.5/`, `outputs/sensitivity_0.6/` - pipeline outputs
+- **Learnings for future iterations:**
+  - Lower thresholds detect more events (more sensitive)
+  - Liquidity-first remains the plurality classification across all thresholds
+  - Use tempfile for config overrides to avoid modifying base config
+---
+
+## [2026-02-02 19:40] - MF-015
+- What was implemented:
+  - Created `scripts/generate_report.py`
+  - Reads replication_summary.csv and sensitivity_summary.csv
+  - Produces `outputs/replication_report.md` markdown report
+  - All numbers derived from CSVs (not hardcoded)
+  - Answers research question: "Is liquidity-first ordering consistent?"
+- Key findings in report:
+  - Liquidity-first: 60% of detected events across 3 days
+  - Pattern stable across threshold variations (0.4%-0.6%)
+  - Answer: "Yes, with qualifications"
+- Files changed:
+  - `scripts/generate_report.py` - new file
+  - `outputs/replication_report.md` - generated output
+- **Learnings for future iterations:**
+  - Reports should always derive numbers from generated data files
+  - Include caveats about data limitations (days, symbol, exchange)
+  - Structure: Executive Summary -> Data Tables -> Analysis -> Answer
+---
